@@ -1,0 +1,7345 @@
+{
+  "rvc_instructions": [
+    {
+      "name": "C.XOR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.xor {rsoneprime}, {rstwoprime}"
+    },
+    {
+      "name": "C.JR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "c.jr {rs1}"
+    },
+    {
+      "name": "C.EBREAK",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [],
+      "assembly_syntax": "c.ebreak "
+    },
+    {
+      "name": "C.JALR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "c.jalr {rs1}"
+    },
+    {
+      "name": "C.FSWSP",
+      "extension": "F",
+      "isa_bases": [
+        "RV32"
+      ],
+      "operands": [
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.fswsp {rs2}, {uimm}"
+    },
+    {
+      "name": "C.SDSP",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.sdsp {rs2}, {uimm}"
+    },
+    {
+      "name": "C.ADD",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "c.add {rs1}, {rs2}"
+    },
+    {
+      "name": "C.AND",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.and {rsoneprime}, {rstwoprime}"
+    },
+    {
+      "name": "C.BNEZ",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 8,
+            "RV32": 8
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.bnez {rsoneprime}, {imm}"
+    },
+    {
+      "name": "C.LWSP",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 6,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.lwsp {rd}, {uimm}"
+    },
+    {
+      "name": "C.SRLI64",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.srli64 {rsoneprime}"
+    },
+    {
+      "name": "C.ADDI16SP",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "nzimm",
+          "bit_lengths": {
+            "RV32": 6,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.addi16sp {nzimm}"
+    },
+    {
+      "name": "C.ADDI4SPN",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "nzuimm",
+          "bit_lengths": {
+            "RV64": 8,
+            "RV32": 8
+          }
+        },
+        {
+          "name": "rdprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.addi4spn {rdprime}, {nzuimm}"
+    },
+    {
+      "name": "C.SRAI64",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.srai64 {rsoneprime}"
+    },
+    {
+      "name": "C.FSD",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.fsd {rstwoprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.NOP",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "nzimm",
+          "bit_lengths": {
+            "RV32": 6,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.nop {nzimm}"
+    },
+    {
+      "name": "C.SUB",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.sub {rsoneprime}, {rstwoprime}"
+    },
+    {
+      "name": "C.ANDI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.andi {rsoneprime}, {imm}"
+    },
+    {
+      "name": "C.LD",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rdprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.ld {rdprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.ADDIW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.addiw {rs1}, {imm}"
+    },
+    {
+      "name": "C.BEQZ",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 8,
+            "RV64": 8
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.beqz {rsoneprime}, {imm}"
+    },
+    {
+      "name": "C.SLLI64",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "c.slli64 {rs1}"
+    },
+    {
+      "name": "C.SRAI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "nzuimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 6
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.srai {rsoneprime}, {nzuimm}"
+    },
+    {
+      "name": "C.J",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 11,
+            "RV32": 11
+          }
+        }
+      ],
+      "assembly_syntax": "c.j {imm}"
+    },
+    {
+      "name": "C.LDSP",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.ldsp {rd}, {uimm}"
+    },
+    {
+      "name": "C.FLW",
+      "extension": "F",
+      "isa_bases": [
+        "RV32"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rdprime",
+          "bit_lengths": {
+            "RV32": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.flw {rdprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.ADDW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.addw {rsoneprime}, {rstwoprime}"
+    },
+    {
+      "name": "C.MV",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "c.mv {rd}, {rs2}"
+    },
+    {
+      "name": "C.ADDI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "nzimm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.addi {rs1}, {nzimm}"
+    },
+    {
+      "name": "C.LI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.li {rd}, {imm}"
+    },
+    {
+      "name": "C.FSDSP",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 6,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.fsdsp {rs2}, {uimm}"
+    },
+    {
+      "name": "C.FLDSP",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.fldsp {rd}, {uimm}"
+    },
+    {
+      "name": "C.LUI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "nzimm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.lui {rd}, {nzimm}"
+    },
+    {
+      "name": "C.FLD",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rdprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.fld {rdprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.SD",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.sd {rstwoprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.SW",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.sw {rstwoprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.SRLI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "nzuimm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.srli {rsoneprime}, {nzuimm}"
+    },
+    {
+      "name": "C.SWSP",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.swsp {rs2}, {uimm}"
+    },
+    {
+      "name": "C.SLLI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "nzuimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.slli {rs1}, {nzuimm}"
+    },
+    {
+      "name": "C.LW",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rdprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.lw {rdprime}, {uimm}({rsoneprime})"
+    },
+    {
+      "name": "C.JAL",
+      "extension": "I",
+      "isa_bases": [
+        "RV32"
+      ],
+      "operands": [
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 11
+          }
+        }
+      ],
+      "assembly_syntax": "c.jal {imm}"
+    },
+    {
+      "name": "C.FLWSP",
+      "extension": "F",
+      "isa_bases": [
+        "RV32"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 6
+          }
+        }
+      ],
+      "assembly_syntax": "c.flwsp {rd}, {uimm}"
+    },
+    {
+      "name": "C.SUBW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.subw {rsoneprime}, {rstwoprime}"
+    },
+    {
+      "name": "C.OR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.or {rsoneprime}, {rstwoprime}"
+    },
+    {
+      "name": "C.FSW",
+      "extension": "F",
+      "isa_bases": [
+        "RV32"
+      ],
+      "operands": [
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rsoneprime",
+          "bit_lengths": {
+            "RV32": 3
+          }
+        },
+        {
+          "name": "rstwoprime",
+          "bit_lengths": {
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "c.fsw {rstwoprime}, {uimm}({rsoneprime})"
+    }
+  ],
+  "standard_instructions": [
+    {
+      "name": "ADDW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "addw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FSGNJ.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnj.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.Q.S",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.q.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FEQ.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "feq.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "REMUW",
+      "extension": "M",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "remuw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FSGNJX.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnjx.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FMAX.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmax.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FSW",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "fsw {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FLQ",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "flq {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "FCVT.LU.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.lu.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FCLASS.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fclass.q {rd}, {rs1}"
+    },
+    {
+      "name": "FMAX.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmax.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.D.W",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.d.w {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FMADD.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmadd.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "SLTU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sltu {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FLT.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "flt.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "JAL",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 20,
+            "RV32": 20
+          }
+        }
+      ],
+      "assembly_syntax": "jal {rd}, {imm}"
+    },
+    {
+      "name": "AND",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "and {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "CSRRC",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "{csr}rc {rd}, {csr}, {rs1}"
+    },
+    {
+      "name": "FLD",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "fld {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "FMIN.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmin.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.LU.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.lu.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FSGNJN.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnjn.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "AMOSWAP.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoswap.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FCVT.W.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.w.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "BGEU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "bgeu {rs1}, {rs2}, {imm}"
+    },
+    {
+      "name": "FMV.X.W",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmv.x.w {rd}, {rs1}"
+    },
+    {
+      "name": "FCVT.S.W",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.s.w {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "SUBW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "subw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SB",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "sb {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FCVT.L.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.l.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FSGNJ.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnj.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.L.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.l.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "JALR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "jalr {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "ECALL",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [],
+      "assembly_syntax": "ecall "
+    },
+    {
+      "name": "LHU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "lhu {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "AMOSWAP.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoswap.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FMIN.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmin.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SLLW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sllw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SD",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "sd {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FSQRT.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fsqrt.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FCLASS.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fclass.d {rd}, {rs1}"
+    },
+    {
+      "name": "FSGNJN.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnjn.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SUB",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sub {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "LW",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "lw {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "LUI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 20,
+            "RV32": 20
+          }
+        }
+      ],
+      "assembly_syntax": "lui {rd}, {imm}"
+    },
+    {
+      "name": "FCVT.L.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.l.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FCVT.Q.L",
+      "extension": "Q",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.q.l {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "AUIPC",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 20,
+            "RV32": 20
+          }
+        }
+      ],
+      "assembly_syntax": "auipc {rd}, {imm}"
+    },
+    {
+      "name": "BGE",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "bge {rs1}, {rs2}, {imm}"
+    },
+    {
+      "name": "FNMSUB.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fnmsub.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "ADD",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "add {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FMUL.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmul.d {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "XOR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "xor {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "AMOMIN.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amomin.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "SRLI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "shamt",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "srli {rd}, {rs1}, {shamt}"
+    },
+    {
+      "name": "FADD.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fadd.s {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "SLT",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "slt {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FMV.D.X",
+      "extension": "D",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmv.d.x {rd}, {rs1}"
+    },
+    {
+      "name": "CSRRW",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "{csr}rw {rd}, {csr}, {rs1}"
+    },
+    {
+      "name": "FSGNJX.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnjx.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "AMOMAX.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amomax.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "SRAI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "shamt",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "srai {rd}, {rs1}, {shamt}"
+    },
+    {
+      "name": "FADD.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fadd.q {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "BLTU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "bltu {rs1}, {rs2}, {imm}"
+    },
+    {
+      "name": "ADDI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "addi {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "CSRRSI",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "{csr}rsi {rd}, {csr}, {uimm}"
+    },
+    {
+      "name": "AMOAND.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoand.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "SLTIU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "sltiu {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "AMOMIN.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amomin.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FNMADD.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fnmadd.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "BLT",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "blt {rs1}, {rs2}, {imm}"
+    },
+    {
+      "name": "FSGNJX.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnjx.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "AMOOR.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoor.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FDIV.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fdiv.d {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "FCVT.D.S",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.d.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "AMOAND.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoand.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FSQRT.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fsqrt.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FMADD.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmadd.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "FCVT.WU.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.wu.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FSQRT.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fsqrt.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "REMU",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "remu {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SRLIW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "shamt",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "srliw {rd}, {rs1}, {shamt}"
+    },
+    {
+      "name": "FCVT.S.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.s.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FCVT.Q.W",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.q.w {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FCVT.Q.LU",
+      "extension": "Q",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.q.lu {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "MULHSU",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "mulhsu {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.W.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.w.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "CSRRS",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "{csr}rs {rd}, {csr}, {rs1}"
+    },
+    {
+      "name": "FMADD.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmadd.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "AMOMAXU.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amomaxu.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "CSRRWI",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "{csr}rwi {rd}, {csr}, {uimm}"
+    },
+    {
+      "name": "ANDI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "andi {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "SLL",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sll {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FLE.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fle.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.D.L",
+      "extension": "D",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.d.l {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "SLLI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "shamt",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 6
+          }
+        }
+      ],
+      "assembly_syntax": "slli {rd}, {rs1}, {shamt}"
+    },
+    {
+      "name": "LWU",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "lwu {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "SRAW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sraw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "DIVU",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "divu {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FLT.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "flt.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "BNE",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "bne {rs1}, {rs2}, {imm}"
+    },
+    {
+      "name": "FCVT.Q.WU",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.q.wu {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "MULW",
+      "extension": "M",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "mulw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SC.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "sc.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FCVT.W.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.w.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "REM",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "rem {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FMSUB.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmsub.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "FMSUB.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmsub.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "LB",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "lb {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "MULHU",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "mulhu {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FNMSUB.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fnmsub.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "FCVT.WU.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.wu.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "BEQ",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "beq {rs1}, {rs2}, {imm}"
+    },
+    {
+      "name": "SW",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "sw {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FCVT.LU.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.lu.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "LR.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "lr.w {rd}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FSQ",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "fsq {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FMUL.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmul.q {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "LBU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "lbu {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "FCVT.D.WU",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.d.wu {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "OR",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "or {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FEQ.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "feq.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "CSRRCI",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "{csr}rci {rd}, {csr}, {uimm}"
+    },
+    {
+      "name": "DIVW",
+      "extension": "M",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "divw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FLW",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "flw {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "MULH",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "mulh {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "XORI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "xori {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "LH",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "lh {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "AMOMINU.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amominu.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FMUL.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmul.s {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "FMV.W.X",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmv.w.x {rd}, {rs1}"
+    },
+    {
+      "name": "FNMADD.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fnmadd.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "FCVT.S.LU",
+      "extension": "F",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.s.lu {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FMIN.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmin.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "DIV",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "div {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FMSUB.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fmsub.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "AMOXOR.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoxor.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "AMOADD.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoadd.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "AMOMAX.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amomax.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FSUB.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fsub.d {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "EBREAK",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [],
+      "assembly_syntax": "ebreak "
+    },
+    {
+      "name": "FCLASS.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fclass.s {rd}, {rs1}"
+    },
+    {
+      "name": "FENCE",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fm",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "pred",
+          "bit_lengths": {
+            "RV64": 4,
+            "RV32": 4
+          }
+        },
+        {
+          "name": "succ",
+          "bit_lengths": {
+            "RV32": 4,
+            "RV64": 4
+          }
+        }
+      ],
+      "assembly_syntax": "fence {rd}, {rs1}, {fm}, {pred}, {succ}"
+    },
+    {
+      "name": "FSUB.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fsub.q {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "ADDIW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "addiw {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "AMOXOR.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoxor.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FADD.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fadd.d {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "LD",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "ld {rd}, {imm}({rs1})"
+    },
+    {
+      "name": "FENCE.I",
+      "extension": "Zifencei",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "fence.i {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "AMOMAXU.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amomaxu.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "AMOMINU.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amominu.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FNMSUB.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fnmsub.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "FDIV.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fdiv.q {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "FCVT.WU.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.wu.s {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "SH",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "sh {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FCVT.S.L",
+      "extension": "F",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.s.l {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FLE.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fle.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SRAIW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "shamt",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sraiw {rd}, {rs1}, {shamt}"
+    },
+    {
+      "name": "FCVT.S.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.s.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FEQ.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "feq.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.D.LU",
+      "extension": "D",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.d.lu {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FNMADD.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fnmadd.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+    },
+    {
+      "name": "DIVUW",
+      "extension": "M",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "divuw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "AMOADD.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoadd.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "AMOOR.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "amoor.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FSUB.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fsub.s {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "SRA",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "sra {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FCVT.S.WU",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.s.wu {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FLE.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fle.s {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SRL",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "srl {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "LR.D",
+      "extension": "A",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1
+          }
+        }
+      ],
+      "assembly_syntax": "lr.d {rd}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FSD",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": "fsd {rs2}, {imm}({rs1})"
+    },
+    {
+      "name": "FMAX.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmax.q {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SLTI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "slti {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "FDIV.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fdiv.s {rd}, {rs1}, {rs2}, {rm}"
+    },
+    {
+      "name": "ORI",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": "ori {rd}, {rs1}, {imm}"
+    },
+    {
+      "name": "FCVT.D.Q",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.d.q {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "SC.W",
+      "extension": "A",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "aq",
+          "bit_lengths": {
+            "RV32": 1,
+            "RV64": 1
+          }
+        },
+        {
+          "name": "rl",
+          "bit_lengths": {
+            "RV64": 1,
+            "RV32": 1
+          }
+        }
+      ],
+      "assembly_syntax": "sc.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+    },
+    {
+      "name": "FCVT.Q.D",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3,
+            "RV32": 3
+          }
+        }
+      ],
+      "assembly_syntax": "fcvt.q.d {rd}, {rs1}, {rm}"
+    },
+    {
+      "name": "FLT.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "flt.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "REMW",
+      "extension": "M",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "remw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SRLW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "srlw {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "MUL",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "mul {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FSGNJN.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnjn.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "FSGNJ.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fsgnj.d {rd}, {rs1}, {rs2}"
+    },
+    {
+      "name": "SLLIW",
+      "extension": "I",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "shamt",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "slliw {rd}, {rs1}, {shamt}"
+    },
+    {
+      "name": "FMV.X.D",
+      "extension": "D",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": "fmv.x.d {rd}, {rs1}"
+    }
+  ]
+}
