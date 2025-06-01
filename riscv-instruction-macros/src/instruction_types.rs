@@ -1,12 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, fmt::Display};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct RiscvInstructionDef {
-    pub rvc_instructions: Vec<Instruction>,
-    pub standard_instructions: Vec<Instruction>,
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum ISAExtension {
     I,
@@ -52,16 +46,44 @@ pub struct ISAModule {
     pub base: ISABase,
     pub extension: ISAExtension,
 }
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Operand {
     pub name: String,
     pub bit_lengths: HashMap<ISABase, u8>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub restrictions: Option<OperandRestriction>,
 }
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct OperandRestriction {
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub not_zero: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub multiple_of: Option<u8>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min_max: Option<(i64, i64)>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub forbidden_values: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RiscvInstructionDef {
+    pub rvc_instructions: Vec<Instruction>,
+    pub standard_instructions: Vec<Instruction>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Instruction {
     pub name: String,
     pub extension: ISAExtension,
     pub isa_bases: Vec<ISABase>,
     pub operands: Vec<Operand>,
-    pub assembly_syntax: String,
+    pub assembly_syntax: AssemblySyntax,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum AssemblySyntax {
+    Format(String),
+    RustCode(String),
 }

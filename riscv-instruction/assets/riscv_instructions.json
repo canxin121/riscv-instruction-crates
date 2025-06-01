@@ -9,21 +9,23 @@
       ],
       "operands": [
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.xor {rsoneprime}, {rstwoprime}"
+      "assembly_syntax": {
+        "Format": "c.xor {rs1p}, {rs2p}"
+      }
     },
     {
       "name": "C.JR",
@@ -38,10 +40,17 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         }
       ],
-      "assembly_syntax": "c.jr {rs1}"
+      "assembly_syntax": {
+        "Format": "c.jr {rs1}"
+      }
     },
     {
       "name": "C.EBREAK",
@@ -51,7 +60,9 @@
         "RV64"
       ],
       "operands": [],
-      "assembly_syntax": "c.ebreak "
+      "assembly_syntax": {
+        "Format": "c.ebreak "
+      }
     },
     {
       "name": "C.JALR",
@@ -64,12 +75,19 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         }
       ],
-      "assembly_syntax": "c.jalr {rs1}"
+      "assembly_syntax": {
+        "Format": "c.jalr {rs1}"
+      }
     },
     {
       "name": "C.FSWSP",
@@ -79,7 +97,7 @@
       ],
       "operands": [
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5
           }
@@ -88,10 +106,15 @@
           "name": "uimm",
           "bit_lengths": {
             "RV32": 6
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         }
       ],
-      "assembly_syntax": "c.fswsp {rs2}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.fswsp {fs2}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.SDSP",
@@ -110,10 +133,15 @@
           "name": "uimm",
           "bit_lengths": {
             "RV64": 6
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         }
       ],
-      "assembly_syntax": "c.sdsp {rs2}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.sdsp {rs2}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.ADD",
@@ -135,10 +163,17 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         }
       ],
-      "assembly_syntax": "c.add {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "c.add {rs1}, {rs2}"
+      }
     },
     {
       "name": "C.AND",
@@ -149,21 +184,23 @@
       ],
       "operands": [
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV32": 3,
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.and {rsoneprime}, {rstwoprime}"
+      "assembly_syntax": {
+        "Format": "c.and {rs1p}, {rs2p}"
+      }
     },
     {
       "name": "C.BNEZ",
@@ -176,19 +213,21 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 8,
-            "RV32": 8
+            "RV32": 8,
+            "RV64": 8
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.bnez {rsoneprime}, {imm}"
+      "assembly_syntax": {
+        "Format": "c.bnez {rs1p}, {imm}"
+      }
     },
     {
       "name": "C.LWSP",
@@ -201,19 +240,29 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         },
         {
           "name": "uimm",
           "bit_lengths": {
-            "RV32": 6,
-            "RV64": 6
+            "RV64": 6,
+            "RV32": 6
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         }
       ],
-      "assembly_syntax": "c.lwsp {rd}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.lwsp {rd}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.SRLI64",
@@ -224,14 +273,16 @@
       ],
       "operands": [
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.srli64 {rsoneprime}"
+      "assembly_syntax": {
+        "Format": "c.srli64 {rs1p}"
+      }
     },
     {
       "name": "C.ADDI16SP",
@@ -246,10 +297,15 @@
           "bit_lengths": {
             "RV32": 6,
             "RV64": 6
+          },
+          "restrictions": {
+            "multiple_of": 16
           }
         }
       ],
-      "assembly_syntax": "c.addi16sp {nzimm}"
+      "assembly_syntax": {
+        "Format": "c.addi16sp sp, {nzimm}"
+      }
     },
     {
       "name": "C.ADDI4SPN",
@@ -262,19 +318,24 @@
         {
           "name": "nzuimm",
           "bit_lengths": {
-            "RV64": 8,
-            "RV32": 8
+            "RV32": 8,
+            "RV64": 8
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
-          "name": "rdprime",
+          "name": "rdp",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.addi4spn {rdprime}, {nzuimm}"
+      "assembly_syntax": {
+        "Format": "c.addi4spn {rdp}, sp, {nzuimm}"
+      }
     },
     {
       "name": "C.SRAI64",
@@ -285,14 +346,16 @@
       ],
       "operands": [
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV32": 3,
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.srai64 {rsoneprime}"
+      "assembly_syntax": {
+        "Format": "c.srai64 {rs1p}"
+      }
     },
     {
       "name": "C.FSD",
@@ -307,24 +370,29 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "fs2p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.fsd {rstwoprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.fsd {fs2p}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.NOP",
@@ -342,7 +410,9 @@
           }
         }
       ],
-      "assembly_syntax": "c.nop {nzimm}"
+      "assembly_syntax": {
+        "Format": "c.nop {nzimm}"
+      }
     },
     {
       "name": "C.SUB",
@@ -353,21 +423,23 @@
       ],
       "operands": [
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.sub {rsoneprime}, {rstwoprime}"
+      "assembly_syntax": {
+        "Format": "c.sub {rs1p}, {rs2p}"
+      }
     },
     {
       "name": "C.ANDI",
@@ -380,19 +452,21 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 6,
-            "RV32": 6
+            "RV32": 6,
+            "RV64": 6
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.andi {rsoneprime}, {imm}"
+      "assembly_syntax": {
+        "Format": "c.andi {rs1p}, {imm}"
+      }
     },
     {
       "name": "C.LD",
@@ -405,22 +479,27 @@
           "name": "uimm",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
-          "name": "rdprime",
+          "name": "rdp",
           "bit_lengths": {
             "RV64": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.ld {rdprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.ld {rdp}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.ADDIW",
@@ -433,6 +512,11 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         },
         {
@@ -442,7 +526,9 @@
           }
         }
       ],
-      "assembly_syntax": "c.addiw {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "c.addiw {rs1}, {imm}"
+      }
     },
     {
       "name": "C.BEQZ",
@@ -455,19 +541,21 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 8,
-            "RV64": 8
+            "RV64": 8,
+            "RV32": 8
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.beqz {rsoneprime}, {imm}"
+      "assembly_syntax": {
+        "Format": "c.beqz {rs1p}, {imm}"
+      }
     },
     {
       "name": "C.SLLI64",
@@ -480,12 +568,14 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "c.slli64 {rs1}"
+      "assembly_syntax": {
+        "Format": "c.slli64 {rs1}"
+      }
     },
     {
       "name": "C.SRAI",
@@ -498,19 +588,21 @@
         {
           "name": "nzuimm",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 6
+            "RV64": 6,
+            "RV32": 5
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.srai {rsoneprime}, {nzuimm}"
+      "assembly_syntax": {
+        "Format": "c.srai {rs1p}, {nzuimm}"
+      }
     },
     {
       "name": "C.J",
@@ -528,7 +620,9 @@
           }
         }
       ],
-      "assembly_syntax": "c.j {imm}"
+      "assembly_syntax": {
+        "Format": "c.j {imm}"
+      }
     },
     {
       "name": "C.LDSP",
@@ -541,16 +635,26 @@
           "name": "rd",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         },
         {
           "name": "uimm",
           "bit_lengths": {
             "RV64": 6
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         }
       ],
-      "assembly_syntax": "c.ldsp {rd}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.ldsp {rd}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.FLW",
@@ -560,25 +664,30 @@
       ],
       "operands": [
         {
-          "name": "uimm",
-          "bit_lengths": {
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rdprime",
+          "name": "fdp",
           "bit_lengths": {
             "RV32": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
+          }
+        },
+        {
+          "name": "rs1p",
           "bit_lengths": {
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.flw {rdprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.flw {fdp}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.ADDW",
@@ -588,19 +697,21 @@
       ],
       "operands": [
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.addw {rsoneprime}, {rstwoprime}"
+      "assembly_syntax": {
+        "Format": "c.addw {rs1p}, {rs2p}"
+      }
     },
     {
       "name": "C.MV",
@@ -620,12 +731,19 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              0
+            ]
           }
         }
       ],
-      "assembly_syntax": "c.mv {rd}, {rs2}"
+      "assembly_syntax": {
+        "Format": "c.mv {rd}, {rs2}"
+      }
     },
     {
       "name": "C.ADDI",
@@ -638,8 +756,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -650,7 +768,9 @@
           }
         }
       ],
-      "assembly_syntax": "c.addi {rs1}, {nzimm}"
+      "assembly_syntax": {
+        "Format": "c.addi {rs1}, {nzimm}"
+      }
     },
     {
       "name": "C.LI",
@@ -670,12 +790,14 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 6,
-            "RV32": 6
+            "RV32": 6,
+            "RV64": 6
           }
         }
       ],
-      "assembly_syntax": "c.li {rd}, {imm}"
+      "assembly_syntax": {
+        "Format": "c.li {rd}, {imm}"
+      }
     },
     {
       "name": "C.FSDSP",
@@ -686,32 +808,7 @@
       ],
       "operands": [
         {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "uimm",
-          "bit_lengths": {
-            "RV32": 6,
-            "RV64": 6
-          }
-        }
-      ],
-      "assembly_syntax": "c.fsdsp {rs2}, {uimm}"
-    },
-    {
-      "name": "C.FLDSP",
-      "extension": "D",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -722,10 +819,45 @@
           "bit_lengths": {
             "RV64": 6,
             "RV32": 6
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         }
       ],
-      "assembly_syntax": "c.fldsp {rd}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.fsdsp {fs2}, {uimm}(sp)"
+      }
+    },
+    {
+      "name": "C.FLDSP",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "uimm",
+          "bit_lengths": {
+            "RV64": 6,
+            "RV32": 6
+          },
+          "restrictions": {
+            "multiple_of": 8
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "c.fldsp {fd}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.LUI",
@@ -738,19 +870,33 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "forbidden_values": [
+              2
+            ]
           }
         },
         {
-          "name": "nzimm",
+          "name": "rimm",
           "bit_lengths": {
-            "RV64": 6,
-            "RV32": 6
+            "RV32": 20,
+            "RV64": 20
+          },
+          "restrictions": {
+            "not_zero": true,
+            "min_max": [
+              -32,
+              31
+            ]
           }
         }
       ],
-      "assembly_syntax": "c.lui {rd}, {nzimm}"
+      "assembly_syntax": {
+        "RustCode": "format!(\"c.lui {}, 0x{:x}\", rd, rimm.get() as u32 & 0xfffff)"
+      }
     },
     {
       "name": "C.FLD",
@@ -765,24 +911,29 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
-          "name": "rdprime",
+          "name": "fdp",
           "bit_lengths": {
             "RV32": 3,
             "RV64": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV32": 3,
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.fld {rdprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.fld {fdp}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.SD",
@@ -795,22 +946,27 @@
           "name": "uimm",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.sd {rstwoprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.sd {rs2p}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.SW",
@@ -825,24 +981,29 @@
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV32": 3,
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.sw {rstwoprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.sw {rs2p}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.SRLI",
@@ -855,19 +1016,21 @@
         {
           "name": "nzuimm",
           "bit_lengths": {
-            "RV64": 6,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 6
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.srli {rsoneprime}, {nzuimm}"
+      "assembly_syntax": {
+        "Format": "c.srli {rs1p}, {nzuimm}"
+      }
     },
     {
       "name": "C.SWSP",
@@ -887,12 +1050,17 @@
         {
           "name": "uimm",
           "bit_lengths": {
-            "RV64": 6,
-            "RV32": 6
+            "RV32": 6,
+            "RV64": 6
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         }
       ],
-      "assembly_syntax": "c.swsp {rs2}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.swsp {rs2}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.SLLI",
@@ -905,19 +1073,21 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "nzuimm",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 6
+            "RV64": 6,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "c.slli {rs1}, {nzuimm}"
+      "assembly_syntax": {
+        "Format": "c.slli {rs1}, {nzuimm}"
+      }
     },
     {
       "name": "C.LW",
@@ -930,26 +1100,31 @@
         {
           "name": "uimm",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         },
         {
-          "name": "rdprime",
+          "name": "rdp",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.lw {rdprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.lw {rdp}, {uimm}({rs1p})"
+      }
     },
     {
       "name": "C.JAL",
@@ -965,7 +1140,9 @@
           }
         }
       ],
-      "assembly_syntax": "c.jal {imm}"
+      "assembly_syntax": {
+        "Format": "c.jal {imm}"
+      }
     },
     {
       "name": "C.FLWSP",
@@ -975,7 +1152,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5
           }
@@ -984,10 +1161,15 @@
           "name": "uimm",
           "bit_lengths": {
             "RV32": 6
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         }
       ],
-      "assembly_syntax": "c.flwsp {rd}, {uimm}"
+      "assembly_syntax": {
+        "Format": "c.flwsp {fd}, {uimm}(sp)"
+      }
     },
     {
       "name": "C.SUBW",
@@ -997,19 +1179,21 @@
       ],
       "operands": [
         {
-          "name": "rstwoprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3
           }
         },
         {
-          "name": "rsoneprime",
+          "name": "rs1p",
           "bit_lengths": {
             "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "c.subw {rsoneprime}, {rstwoprime}"
+      "assembly_syntax": {
+        "Format": "c.subw {rs1p}, {rs2p}"
+      }
     },
     {
       "name": "C.OR",
@@ -1020,21 +1204,23 @@
       ],
       "operands": [
         {
-          "name": "rstwoprime",
-          "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
-          }
-        },
-        {
-          "name": "rsoneprime",
+          "name": "rs2p",
           "bit_lengths": {
             "RV64": 3,
             "RV32": 3
           }
+        },
+        {
+          "name": "rs1p",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
         }
       ],
-      "assembly_syntax": "c.or {rsoneprime}, {rstwoprime}"
+      "assembly_syntax": {
+        "Format": "c.or {rs1p}, {rs2p}"
+      }
     },
     {
       "name": "C.FSW",
@@ -1044,25 +1230,30 @@
       ],
       "operands": [
         {
-          "name": "uimm",
-          "bit_lengths": {
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rsoneprime",
+          "name": "fs2p",
           "bit_lengths": {
             "RV32": 3
           }
         },
         {
-          "name": "rstwoprime",
+          "name": "uimm",
+          "bit_lengths": {
+            "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
+          }
+        },
+        {
+          "name": "rs1p",
           "bit_lengths": {
             "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "c.fsw {rstwoprime}, {uimm}({rsoneprime})"
+      "assembly_syntax": {
+        "Format": "c.fsw {fs2p}, {uimm}({rs1p})"
+      }
     }
   ],
   "standard_instructions": [
@@ -1092,7 +1283,9 @@
           }
         }
       ],
-      "assembly_syntax": "addw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "addw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FSGNJ.S",
@@ -1103,28 +1296,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnj.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnj.s {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FCVT.Q.S",
@@ -1135,28 +1330,23 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.q.s {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.q.s {fd}, {fs1}"
+      }
     },
     {
       "name": "FEQ.Q",
@@ -1169,26 +1359,28 @@
         {
           "name": "rd",
           "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "feq.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "feq.q {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "REMUW",
@@ -1216,7 +1408,9 @@
           }
         }
       ],
-      "assembly_syntax": "remuw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "remuw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FSGNJX.Q",
@@ -1227,28 +1421,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnjx.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnjx.q {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FMAX.S",
@@ -1259,28 +1455,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fmax.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fmax.s {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FSW",
@@ -1293,44 +1491,15 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
-          "name": "imm",
-          "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
-          }
-        }
-      ],
-      "assembly_syntax": "fsw {rs2}, {imm}({rs1})"
-    },
-    {
-      "name": "FLQ",
-      "extension": "Q",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -1344,7 +1513,43 @@
           }
         }
       ],
-      "assembly_syntax": "flq {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "fsw {fs2}, {imm}({rs1})"
+      }
+    },
+    {
+      "name": "FLQ",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "fd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "flq {fd}, {imm}({rs1})"
+      }
     },
     {
       "name": "FCVT.LU.Q",
@@ -1360,7 +1565,7 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
@@ -1372,7 +1577,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.lu.q {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.lu.q {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FCLASS.Q",
@@ -1385,19 +1592,21 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fclass.q {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fclass.q {rd}, {fs1}"
+      }
     },
     {
       "name": "FMAX.D",
@@ -1408,28 +1617,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fmax.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fmax.d {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FCVT.D.W",
@@ -1440,28 +1651,23 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rm",
+          "name": "rs1",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fcvt.d.w {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.d.w {fd}, {rs1}"
+      }
     },
     {
       "name": "FMADD.Q",
@@ -1472,42 +1678,44 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs3",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fmadd.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmadd.q {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "SLTU",
@@ -1534,12 +1742,14 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "sltu {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "sltu {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FLT.S",
@@ -1552,26 +1762,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "flt.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "flt.s {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "JAL",
@@ -1591,12 +1803,14 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 20,
-            "RV32": 20
+            "RV32": 20,
+            "RV64": 20
           }
         }
       ],
-      "assembly_syntax": "jal {rd}, {imm}"
+      "assembly_syntax": {
+        "Format": "jal {rd}, {imm}"
+      }
     },
     {
       "name": "AND",
@@ -1609,26 +1823,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "and {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "and {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "CSRRC",
@@ -1648,8 +1864,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -1660,7 +1876,9 @@
           }
         }
       ],
-      "assembly_syntax": "{csr}rc {rd}, {csr}, {rs1}"
+      "assembly_syntax": {
+        "Format": "csrrc {rd}, {csr}, {rs1}"
+      }
     },
     {
       "name": "FLD",
@@ -1671,7 +1889,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -1682,17 +1900,22 @@
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
+            "RV32": 12,
+            "RV64": 12
           }
         }
       ],
-      "assembly_syntax": "fld {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "fld {fd}, {imm}({rs1})"
+      }
     },
     {
       "name": "FMIN.D",
@@ -1703,28 +1926,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "fmin.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fmin.d {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FCVT.LU.D",
@@ -1740,7 +1965,7 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
@@ -1752,7 +1977,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.lu.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.lu.d {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FSGNJN.Q",
@@ -1763,28 +1990,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnjn.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnjn.q {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "AMOSWAP.W",
@@ -1797,8 +2026,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -1806,6 +2035,9 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -1830,7 +2062,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoswap.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoswap.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoswap.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoswap.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoswap.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FCVT.W.Q",
@@ -1843,12 +2077,12 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -1857,12 +2091,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.w.q {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.w.q {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "BGEU",
@@ -1875,15 +2111,15 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -1894,7 +2130,9 @@
           }
         }
       ],
-      "assembly_syntax": "bgeu {rs1}, {rs2}, {imm}"
+      "assembly_syntax": {
+        "Format": "bgeu {rs1}, {rs2}, {imm}"
+      }
     },
     {
       "name": "FMV.X.W",
@@ -1912,14 +2150,16 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fmv.x.w {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fmv.x.w {rd}, {fs1}"
+      }
     },
     {
       "name": "FCVT.S.W",
@@ -1930,10 +2170,10 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -1946,12 +2186,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.s.w {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.s.w {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "SUBW",
@@ -1979,7 +2221,9 @@
           }
         }
       ],
-      "assembly_syntax": "subw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "subw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "SB",
@@ -1992,26 +2236,28 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
+            "RV32": 12,
+            "RV64": 12
           }
         }
       ],
-      "assembly_syntax": "sb {rs2}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "sb {rs2}, {imm}({rs1})"
+      }
     },
     {
       "name": "FCVT.L.D",
@@ -2027,7 +2273,7 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
@@ -2039,7 +2285,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.l.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.l.d {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FSGNJ.Q",
@@ -2050,28 +2298,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnj.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnj.q {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FCVT.L.S",
@@ -2087,7 +2337,7 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
@@ -2099,52 +2349,12 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.l.s {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.l.s {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "JALR",
-      "extension": "I",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "imm",
-          "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
-          }
-        }
-      ],
-      "assembly_syntax": "jalr {rd}, {rs1}, {imm}"
-    },
-    {
-      "name": "ECALL",
-      "extension": "I",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [],
-      "assembly_syntax": "ecall "
-    },
-    {
-      "name": "LHU",
       "extension": "I",
       "isa_bases": [
         "RV32",
@@ -2173,7 +2383,58 @@
           }
         }
       ],
-      "assembly_syntax": "lhu {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "jalr {rd}, {rs1}, {imm}"
+      }
+    },
+    {
+      "name": "ECALL",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [],
+      "assembly_syntax": {
+        "Format": "ecall "
+      }
+    },
+    {
+      "name": "LHU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 2
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "lhu {rd}, {imm}({rs1})"
+      }
     },
     {
       "name": "AMOSWAP.D",
@@ -2192,6 +2453,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -2213,7 +2477,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoswap.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoswap.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoswap.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoswap.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoswap.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FMIN.S",
@@ -2224,28 +2490,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "fmin.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fmin.s {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "SLLW",
@@ -2273,7 +2541,9 @@
           }
         }
       ],
-      "assembly_syntax": "sllw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "sllw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "SD",
@@ -2286,6 +2556,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -2301,7 +2574,9 @@
           }
         }
       ],
-      "assembly_syntax": "sd {rs2}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "sd {rs2}, {imm}({rs1})"
+      }
     },
     {
       "name": "FSQRT.Q",
@@ -2312,28 +2587,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fsqrt.q {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fsqrt.q {fd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FCLASS.D",
@@ -2346,19 +2623,21 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fclass.d {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fclass.d {rd}, {fs1}"
+      }
     },
     {
       "name": "FSGNJN.S",
@@ -2369,28 +2648,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
         }
       ],
-      "assembly_syntax": "fsgnjn.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnjn.s {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "SUB",
@@ -2403,8 +2684,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -2417,12 +2698,14 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "sub {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "sub {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "LW",
@@ -2444,17 +2727,22 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "lw {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "lw {rd}, {imm}({rs1})"
+      }
     },
     {
       "name": "LUI",
@@ -2472,14 +2760,16 @@
           }
         },
         {
-          "name": "imm",
+          "name": "uimm",
           "bit_lengths": {
             "RV64": 20,
             "RV32": 20
           }
         }
       ],
-      "assembly_syntax": "lui {rd}, {imm}"
+      "assembly_syntax": {
+        "Format": "lui {rd}, {uimm}"
+      }
     },
     {
       "name": "FCVT.L.Q",
@@ -2495,7 +2785,7 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
@@ -2507,7 +2797,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.l.q {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.l.q {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FCVT.Q.L",
@@ -2517,7 +2809,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5
           }
@@ -2535,7 +2827,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.q.l {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.q.l {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "AUIPC",
@@ -2553,14 +2847,16 @@
           }
         },
         {
-          "name": "imm",
+          "name": "uimm",
           "bit_lengths": {
             "RV64": 20,
             "RV32": 20
           }
         }
       ],
-      "assembly_syntax": "auipc {rd}, {imm}"
+      "assembly_syntax": {
+        "Format": "auipc {rd}, {uimm}"
+      }
     },
     {
       "name": "BGE",
@@ -2580,8 +2876,8 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -2592,7 +2888,9 @@
           }
         }
       ],
-      "assembly_syntax": "bge {rs1}, {rs2}, {imm}"
+      "assembly_syntax": {
+        "Format": "bge {rs1}, {rs2}, {imm}"
+      }
     },
     {
       "name": "FNMSUB.S",
@@ -2603,42 +2901,44 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rm",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "fnmsub.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fnmsub.s {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "ADD",
@@ -2658,19 +2958,21 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "add {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "add {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FMUL.D",
@@ -2681,24 +2983,24 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -2709,7 +3011,9 @@
           }
         }
       ],
-      "assembly_syntax": "fmul.d {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmul.d {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "XOR",
@@ -2741,7 +3045,9 @@
           }
         }
       ],
-      "assembly_syntax": "xor {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "xor {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "AMOMIN.D",
@@ -2760,6 +3066,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -2781,7 +3090,9 @@
           }
         }
       ],
-      "assembly_syntax": "amomin.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amomin.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomin.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomin.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomin.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "SRLI",
@@ -2794,15 +3105,15 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -2813,7 +3124,9 @@
           }
         }
       ],
-      "assembly_syntax": "srli {rd}, {rs1}, {shamt}"
+      "assembly_syntax": {
+        "Format": "srli {rd}, {rs1}, {shamt}"
+      }
     },
     {
       "name": "FADD.S",
@@ -2824,21 +3137,21 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -2847,12 +3160,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fadd.s {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fadd.s {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "SLT",
@@ -2872,8 +3187,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -2884,7 +3199,9 @@
           }
         }
       ],
-      "assembly_syntax": "slt {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "slt {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FMV.D.X",
@@ -2894,7 +3211,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5
           }
@@ -2906,7 +3223,9 @@
           }
         }
       ],
-      "assembly_syntax": "fmv.d.x {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fmv.d.x {fd}, {rs1}"
+      }
     },
     {
       "name": "CSRRW",
@@ -2926,8 +3245,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -2938,7 +3257,9 @@
           }
         }
       ],
-      "assembly_syntax": "{csr}rw {rd}, {csr}, {rs1}"
+      "assembly_syntax": {
+        "Format": "csrrw {rd}, {csr}, {rs1}"
+      }
     },
     {
       "name": "FSGNJX.D",
@@ -2949,28 +3270,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnjx.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnjx.d {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "AMOMAX.D",
@@ -2989,6 +3312,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -3010,7 +3336,9 @@
           }
         }
       ],
-      "assembly_syntax": "amomax.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amomax.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomax.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomax.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomax.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "SRAI",
@@ -3023,15 +3351,15 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -3042,7 +3370,9 @@
           }
         }
       ],
-      "assembly_syntax": "srai {rd}, {rs1}, {shamt}"
+      "assembly_syntax": {
+        "Format": "srai {rd}, {rs1}, {shamt}"
+      }
     },
     {
       "name": "FADD.Q",
@@ -3053,24 +3383,24 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -3081,7 +3411,9 @@
           }
         }
       ],
-      "assembly_syntax": "fadd.q {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fadd.q {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "BLTU",
@@ -3094,26 +3426,28 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "bltu {rs1}, {rs2}, {imm}"
+      "assembly_syntax": {
+        "Format": "bltu {rs1}, {rs2}, {imm}"
+      }
     },
     {
       "name": "ADDI",
@@ -3126,8 +3460,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -3145,7 +3479,9 @@
           }
         }
       ],
-      "assembly_syntax": "addi {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "addi {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "CSRRSI",
@@ -3165,8 +3501,8 @@
         {
           "name": "uimm",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -3177,7 +3513,9 @@
           }
         }
       ],
-      "assembly_syntax": "{csr}rsi {rd}, {csr}, {uimm}"
+      "assembly_syntax": {
+        "Format": "csrrsi {rd}, {csr}, {uimm}"
+      }
     },
     {
       "name": "AMOAND.W",
@@ -3190,8 +3528,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -3199,6 +3537,9 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -3218,12 +3559,14 @@
         {
           "name": "rl",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         }
       ],
-      "assembly_syntax": "amoand.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoand.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoand.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoand.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoand.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "SLTIU",
@@ -3243,8 +3586,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -3255,7 +3598,9 @@
           }
         }
       ],
-      "assembly_syntax": "sltiu {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "sltiu {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "AMOMIN.W",
@@ -3277,6 +3622,9 @@
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -3301,7 +3649,9 @@
           }
         }
       ],
-      "assembly_syntax": "amomin.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amomin.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomin.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomin.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomin.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FNMADD.S",
@@ -3312,28 +3662,28 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs3",
+          "name": "fs3",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -3342,12 +3692,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fnmadd.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fnmadd.s {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "BLT",
@@ -3374,12 +3726,14 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "blt {rs1}, {rs2}, {imm}"
+      "assembly_syntax": {
+        "Format": "blt {rs1}, {rs2}, {imm}"
+      }
     },
     {
       "name": "FSGNJX.S",
@@ -3390,28 +3744,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnjx.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnjx.s {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "AMOOR.W",
@@ -3433,6 +3789,9 @@
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -3445,8 +3804,8 @@
         {
           "name": "aq",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         },
         {
@@ -3457,7 +3816,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoor.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoor.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoor.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoor.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoor.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FDIV.D",
@@ -3468,21 +3829,21 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -3491,12 +3852,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fdiv.d {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fdiv.d {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "FCVT.D.S",
@@ -3507,28 +3870,23 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rm",
+          "name": "fs1",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fcvt.d.s {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.d.s {fd}, {fs1}"
+      }
     },
     {
       "name": "AMOAND.D",
@@ -3547,6 +3905,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -3568,7 +3929,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoand.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoand.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoand.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoand.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoand.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FSQRT.D",
@@ -3579,14 +3942,14 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -3600,7 +3963,9 @@
           }
         }
       ],
-      "assembly_syntax": "fsqrt.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fsqrt.d {fd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FMADD.D",
@@ -3611,42 +3976,44 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs3",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rm",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "fmadd.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmadd.d {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "FCVT.WU.D",
@@ -3659,15 +4026,15 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -3678,7 +4045,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.wu.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.wu.d {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FSQRT.S",
@@ -3689,17 +4058,17 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -3710,7 +4079,9 @@
           }
         }
       ],
-      "assembly_syntax": "fsqrt.s {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fsqrt.s {fd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "REMU",
@@ -3730,19 +4101,21 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "remu {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "remu {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "SRLIW",
@@ -3770,7 +4143,9 @@
           }
         }
       ],
-      "assembly_syntax": "srliw {rd}, {rs1}, {shamt}"
+      "assembly_syntax": {
+        "Format": "srliw {rd}, {rs1}, {shamt}"
+      }
     },
     {
       "name": "FCVT.S.Q",
@@ -3781,216 +4156,14 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
-          }
-        }
-      ],
-      "assembly_syntax": "fcvt.s.q {rd}, {rs1}, {rm}"
-    },
-    {
-      "name": "FCVT.Q.W",
-      "extension": "Q",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
-          }
-        }
-      ],
-      "assembly_syntax": "fcvt.q.w {rd}, {rs1}, {rm}"
-    },
-    {
-      "name": "FCVT.Q.LU",
-      "extension": "Q",
-      "isa_bases": [
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV64": 3
-          }
-        }
-      ],
-      "assembly_syntax": "fcvt.q.lu {rd}, {rs1}, {rm}"
-    },
-    {
-      "name": "MULHSU",
-      "extension": "M",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        }
-      ],
-      "assembly_syntax": "mulhsu {rd}, {rs1}, {rs2}"
-    },
-    {
-      "name": "FCVT.W.S",
-      "extension": "F",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
-          }
-        }
-      ],
-      "assembly_syntax": "fcvt.w.s {rd}, {rs1}, {rm}"
-    },
-    {
-      "name": "CSRRS",
-      "extension": "Zicsr",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "csr",
-          "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
-          }
-        }
-      ],
-      "assembly_syntax": "{csr}rs {rd}, {csr}, {rs1}"
-    },
-    {
-      "name": "FMADD.S",
-      "extension": "F",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs3",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -4004,7 +4177,216 @@
           }
         }
       ],
-      "assembly_syntax": "fmadd.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.s.q {fd}, {fs1}, {rm}"
+      }
+    },
+    {
+      "name": "FCVT.Q.W",
+      "extension": "Q",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "fd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "fcvt.q.w {fd}, {rs1}"
+      }
+    },
+    {
+      "name": "FCVT.Q.LU",
+      "extension": "Q",
+      "isa_bases": [
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "fcvt.q.lu {fd}, {rs1}, {rm}"
+      }
+    },
+    {
+      "name": "MULHSU",
+      "extension": "M",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "mulhsu {rd}, {rs1}, {rs2}"
+      }
+    },
+    {
+      "name": "FCVT.W.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "fcvt.w.s {rd}, {fs1}, {rm}"
+      }
+    },
+    {
+      "name": "CSRRS",
+      "extension": "Zicsr",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "csr",
+          "bit_lengths": {
+            "RV32": 12,
+            "RV64": 12
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "csrrs {rd}, {csr}, {rs1}"
+      }
+    },
+    {
+      "name": "FMADD.S",
+      "extension": "F",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rm",
+          "bit_lengths": {
+            "RV32": 3,
+            "RV64": 3
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "fmadd.s {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "AMOMAXU.D",
@@ -4023,6 +4405,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -4044,7 +4429,9 @@
           }
         }
       ],
-      "assembly_syntax": "amomaxu.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amomaxu.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomaxu.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomaxu.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomaxu.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "CSRRWI",
@@ -4064,8 +4451,8 @@
         {
           "name": "uimm",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -4076,7 +4463,9 @@
           }
         }
       ],
-      "assembly_syntax": "{csr}rwi {rd}, {csr}, {uimm}"
+      "assembly_syntax": {
+        "Format": "csrrwi {rd}, {csr}, {uimm}"
+      }
     },
     {
       "name": "ANDI",
@@ -4103,12 +4492,14 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "andi {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "andi {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "SLL",
@@ -4121,8 +4512,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -4135,12 +4526,14 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "sll {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "sll {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FLE.D",
@@ -4158,21 +4551,23 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fle.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fle.d {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FCVT.D.L",
@@ -4182,7 +4577,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5
           }
@@ -4200,7 +4595,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.d.l {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.d.l {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "SLLI",
@@ -4232,7 +4629,9 @@
           }
         }
       ],
-      "assembly_syntax": "slli {rd}, {rs1}, {shamt}"
+      "assembly_syntax": {
+        "Format": "slli {rd}, {rs1}, {shamt}"
+      }
     },
     {
       "name": "LWU",
@@ -4251,6 +4650,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -4260,7 +4662,9 @@
           }
         }
       ],
-      "assembly_syntax": "lwu {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "lwu {rd}, {imm}({rs1})"
+      }
     },
     {
       "name": "SRAW",
@@ -4288,7 +4692,9 @@
           }
         }
       ],
-      "assembly_syntax": "sraw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "sraw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "DIVU",
@@ -4301,8 +4707,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -4315,12 +4721,14 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "divu {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "divu {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FLT.Q",
@@ -4333,26 +4741,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "flt.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "flt.q {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "BNE",
@@ -4365,8 +4775,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -4384,7 +4794,9 @@
           }
         }
       ],
-      "assembly_syntax": "bne {rs1}, {rs2}, {imm}"
+      "assembly_syntax": {
+        "Format": "bne {rs1}, {rs2}, {imm}"
+      }
     },
     {
       "name": "FCVT.Q.WU",
@@ -4395,28 +4807,23 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fcvt.q.wu {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.q.wu {fd}, {rs1}"
+      }
     },
     {
       "name": "MULW",
@@ -4444,7 +4851,9 @@
           }
         }
       ],
-      "assembly_syntax": "mulw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "mulw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "SC.D",
@@ -4463,6 +4872,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -4484,7 +4896,9 @@
           }
         }
       ],
-      "assembly_syntax": "sc.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"sc.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"sc.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"sc.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"sc.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FCVT.W.D",
@@ -4497,12 +4911,12 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -4511,12 +4925,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.w.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.w.d {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "REM",
@@ -4548,7 +4964,9 @@
           }
         }
       ],
-      "assembly_syntax": "rem {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "rem {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FMSUB.S",
@@ -4559,28 +4977,28 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs3",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -4589,12 +5007,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fmsub.s {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmsub.s {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "FMSUB.Q",
@@ -4605,42 +5025,44 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          }
+        },
+        {
+          "name": "fs3",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fmsub.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmsub.q {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "LB",
@@ -4672,7 +5094,9 @@
           }
         }
       ],
-      "assembly_syntax": "lb {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "lb {rd}, {imm}({rs1})"
+      }
     },
     {
       "name": "MULHU",
@@ -4692,8 +5116,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -4704,7 +5128,9 @@
           }
         }
       ],
-      "assembly_syntax": "mulhu {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "mulhu {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FNMSUB.D",
@@ -4715,28 +5141,28 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs3",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -4750,7 +5176,9 @@
           }
         }
       ],
-      "assembly_syntax": "fnmsub.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fnmsub.d {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "FCVT.WU.Q",
@@ -4763,12 +5191,12 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -4777,12 +5205,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.wu.q {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.wu.q {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "BEQ",
@@ -4795,8 +5225,8 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -4814,7 +5244,9 @@
           }
         }
       ],
-      "assembly_syntax": "beq {rs1}, {rs2}, {imm}"
+      "assembly_syntax": {
+        "Format": "beq {rs1}, {rs2}, {imm}"
+      }
     },
     {
       "name": "SW",
@@ -4827,8 +5259,11 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -4841,12 +5276,14 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
+            "RV32": 12,
+            "RV64": 12
           }
         }
       ],
-      "assembly_syntax": "sw {rs2}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "sw {rs2}, {imm}({rs1})"
+      }
     },
     {
       "name": "FCVT.LU.S",
@@ -4862,7 +5299,7 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
@@ -4874,7 +5311,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.lu.s {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.lu.s {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "LR.W",
@@ -4887,8 +5326,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -4896,13 +5335,16 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "aq",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         },
         {
@@ -4913,7 +5355,9 @@
           }
         }
       ],
-      "assembly_syntax": "lr.w {rd}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"lr.w.aqrl {}, ({})\", rd, rs1)\n} else if *aq {\n    format!(\"lr.w.aq {}, ({})\", rd, rs1)\n} else if *rl {\n    format!(\"lr.w.rl {}, ({})\", rd, rs1)\n} else {\n    format!(\"lr.w {}, ({})\", rd, rs1)\n}"
+      }
     },
     {
       "name": "FSQ",
@@ -4926,12 +5370,12 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -4945,7 +5389,9 @@
           }
         }
       ],
-      "assembly_syntax": "fsq {rs2}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "fsq {fs2}, {imm}({rs1})"
+      }
     },
     {
       "name": "FMUL.Q",
@@ -4956,85 +5402,21 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rm",
-          "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
-          }
-        }
-      ],
-      "assembly_syntax": "fmul.q {rd}, {rs1}, {rs2}, {rm}"
-    },
-    {
-      "name": "LBU",
-      "extension": "I",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "imm",
-          "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
-          }
-        }
-      ],
-      "assembly_syntax": "lbu {rd}, {imm}({rs1})"
-    },
-    {
-      "name": "FCVT.D.WU",
-      "extension": "D",
-      "isa_bases": [
-        "RV32",
-        "RV64"
-      ],
-      "operands": [
-        {
-          "name": "rd",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -5048,7 +5430,70 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.d.wu {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmul.q {fd}, {fs1}, {fs2}, {rm}"
+      }
+    },
+    {
+      "name": "LBU",
+      "extension": "I",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "rd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "imm",
+          "bit_lengths": {
+            "RV64": 12,
+            "RV32": 12
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "lbu {rd}, {imm}({rs1})"
+      }
+    },
+    {
+      "name": "FCVT.D.WU",
+      "extension": "D",
+      "isa_bases": [
+        "RV32",
+        "RV64"
+      ],
+      "operands": [
+        {
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        }
+      ],
+      "assembly_syntax": {
+        "Format": "fcvt.d.wu {fd}, {rs1}"
+      }
     },
     {
       "name": "OR",
@@ -5068,19 +5513,21 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "or {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "or {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FEQ.S",
@@ -5098,21 +5545,23 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "feq.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "feq.s {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "CSRRCI",
@@ -5125,8 +5574,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -5139,12 +5588,14 @@
         {
           "name": "csr",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "{csr}rci {rd}, {csr}, {uimm}"
+      "assembly_syntax": {
+        "Format": "csrrci {rd}, {csr}, {uimm}"
+      }
     },
     {
       "name": "DIVW",
@@ -5172,7 +5623,9 @@
           }
         }
       ],
-      "assembly_syntax": "divw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "divw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FLW",
@@ -5183,7 +5636,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -5192,19 +5645,24 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "imm",
           "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
+            "RV32": 12,
+            "RV64": 12
           }
         }
       ],
-      "assembly_syntax": "flw {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "flw {fd}, {imm}({rs1})"
+      }
     },
     {
       "name": "MULH",
@@ -5236,7 +5694,9 @@
           }
         }
       ],
-      "assembly_syntax": "mulh {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "mulh {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "XORI",
@@ -5268,7 +5728,9 @@
           }
         }
       ],
-      "assembly_syntax": "xori {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "xori {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "LH",
@@ -5281,26 +5743,31 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
+          "name": "rs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 2
+          }
+        },
+        {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "lh {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "lh {rd}, {imm}({rs1})"
+      }
     },
     {
       "name": "AMOMINU.W",
@@ -5320,33 +5787,38 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "aq",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         },
         {
           "name": "rl",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         }
       ],
-      "assembly_syntax": "amominu.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amominu.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amominu.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amominu.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amominu.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FMUL.S",
@@ -5357,21 +5829,21 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -5385,7 +5857,9 @@
           }
         }
       ],
-      "assembly_syntax": "fmul.s {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmul.s {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "FMV.W.X",
@@ -5396,21 +5870,23 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fmv.w.x {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fmv.w.x {fd}, {rs1}"
+      }
     },
     {
       "name": "FNMADD.D",
@@ -5421,28 +5897,28 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs3",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -5456,7 +5932,9 @@
           }
         }
       ],
-      "assembly_syntax": "fnmadd.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fnmadd.d {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "FCVT.S.LU",
@@ -5466,7 +5944,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5
           }
@@ -5484,7 +5962,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.s.lu {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.s.lu {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "FMIN.Q",
@@ -5495,28 +5975,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
         }
       ],
-      "assembly_syntax": "fmin.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fmin.q {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "DIV",
@@ -5536,19 +6018,21 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "div {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "div {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FMSUB.D",
@@ -5559,31 +6043,31 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs3",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs3",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -5594,7 +6078,9 @@
           }
         }
       ],
-      "assembly_syntax": "fmsub.d {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fmsub.d {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "AMOXOR.D",
@@ -5613,6 +6099,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -5634,7 +6123,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoxor.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoxor.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoxor.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoxor.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoxor.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "AMOADD.D",
@@ -5653,6 +6144,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -5674,7 +6168,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoadd.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoadd.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoadd.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoadd.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoadd.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "AMOMAX.W",
@@ -5694,15 +6190,18 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -5715,12 +6214,14 @@
         {
           "name": "rl",
           "bit_lengths": {
-            "RV32": 1,
-            "RV64": 1
+            "RV64": 1,
+            "RV32": 1
           }
         }
       ],
-      "assembly_syntax": "amomax.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amomax.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomax.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomax.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomax.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FSUB.D",
@@ -5731,24 +6232,24 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -5759,7 +6260,9 @@
           }
         }
       ],
-      "assembly_syntax": "fsub.d {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fsub.d {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "EBREAK",
@@ -5769,7 +6272,9 @@
         "RV64"
       ],
       "operands": [],
-      "assembly_syntax": "ebreak "
+      "assembly_syntax": {
+        "Format": "ebreak "
+      }
     },
     {
       "name": "FCLASS.S",
@@ -5782,19 +6287,21 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fclass.s {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fclass.s {rd}, {fs1}"
+      }
     },
     {
       "name": "FENCE",
@@ -5804,27 +6311,6 @@
         "RV64"
       ],
       "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "fm",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
         {
           "name": "pred",
           "bit_lengths": {
@@ -5840,7 +6326,9 @@
           }
         }
       ],
-      "assembly_syntax": "fence {rd}, {rs1}, {fm}, {pred}, {succ}"
+      "assembly_syntax": {
+        "Format": "fence {pred}, {succ}"
+      }
     },
     {
       "name": "FSUB.Q",
@@ -5851,35 +6339,37 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fsub.q {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fsub.q {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "ADDIW",
@@ -5907,7 +6397,9 @@
           }
         }
       ],
-      "assembly_syntax": "addiw {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "addiw {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "AMOXOR.W",
@@ -5927,22 +6419,25 @@
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
           "name": "aq",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         },
         {
@@ -5953,7 +6448,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoxor.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoxor.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoxor.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoxor.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoxor.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FADD.D",
@@ -5964,21 +6461,21 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -5992,7 +6489,9 @@
           }
         }
       ],
-      "assembly_syntax": "fadd.d {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fadd.d {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "LD",
@@ -6011,6 +6510,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -6020,7 +6522,9 @@
           }
         }
       ],
-      "assembly_syntax": "ld {rd}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "ld {rd}, {imm}({rs1})"
+      }
     },
     {
       "name": "FENCE.I",
@@ -6029,30 +6533,10 @@
         "RV32",
         "RV64"
       ],
-      "operands": [
-        {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "imm",
-          "bit_lengths": {
-            "RV64": 12,
-            "RV32": 12
-          }
-        }
-      ],
-      "assembly_syntax": "fence.i {rd}, {rs1}, {imm}"
+      "operands": [],
+      "assembly_syntax": {
+        "Format": "fence.i"
+      }
     },
     {
       "name": "AMOMAXU.W",
@@ -6065,8 +6549,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -6074,6 +6558,9 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -6086,19 +6573,21 @@
         {
           "name": "aq",
           "bit_lengths": {
-            "RV32": 1,
-            "RV64": 1
+            "RV64": 1,
+            "RV32": 1
           }
         },
         {
           "name": "rl",
           "bit_lengths": {
-            "RV64": 1,
-            "RV32": 1
+            "RV32": 1,
+            "RV64": 1
           }
         }
       ],
-      "assembly_syntax": "amomaxu.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amomaxu.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomaxu.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomaxu.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomaxu.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "AMOMINU.D",
@@ -6117,6 +6606,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -6138,7 +6630,9 @@
           }
         }
       ],
-      "assembly_syntax": "amominu.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amominu.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amominu.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amominu.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amominu.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FNMSUB.Q",
@@ -6149,28 +6643,28 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs3",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -6184,7 +6678,9 @@
           }
         }
       ],
-      "assembly_syntax": "fnmsub.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fnmsub.q {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "FDIV.Q",
@@ -6195,21 +6691,21 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -6223,7 +6719,9 @@
           }
         }
       ],
-      "assembly_syntax": "fdiv.q {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fdiv.q {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "FCVT.WU.S",
@@ -6241,10 +6739,10 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -6255,7 +6753,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.wu.s {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.wu.s {rd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "SH",
@@ -6270,13 +6770,16 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 2
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -6287,7 +6790,9 @@
           }
         }
       ],
-      "assembly_syntax": "sh {rs2}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "sh {rs2}, {imm}({rs1})"
+      }
     },
     {
       "name": "FCVT.S.L",
@@ -6297,7 +6802,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5
           }
@@ -6315,7 +6820,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.s.l {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.s.l {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "FLE.Q",
@@ -6333,21 +6840,23 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fle.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fle.q {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "SRAIW",
@@ -6375,7 +6884,9 @@
           }
         }
       ],
-      "assembly_syntax": "sraiw {rd}, {rs1}, {shamt}"
+      "assembly_syntax": {
+        "Format": "sraiw {rd}, {rs1}, {shamt}"
+      }
     },
     {
       "name": "FCVT.S.D",
@@ -6386,14 +6897,14 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
@@ -6402,12 +6913,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 3,
+            "RV64": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.s.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.s.d {fd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "FEQ.D",
@@ -6420,26 +6933,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
         }
       ],
-      "assembly_syntax": "feq.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "feq.d {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FCVT.D.LU",
@@ -6449,7 +6964,7 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5
           }
@@ -6467,7 +6982,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.d.lu {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.d.lu {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "FNMADD.Q",
@@ -6478,31 +6995,31 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs3",
+          "name": "fs3",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -6513,7 +7030,9 @@
           }
         }
       ],
-      "assembly_syntax": "fnmadd.q {rd}, {rs1}, {rs2}, {rs3}, {rm}"
+      "assembly_syntax": {
+        "Format": "fnmadd.q {fd}, {fs1}, {fs2}, {fs3}, {rm}"
+      }
     },
     {
       "name": "DIVUW",
@@ -6541,7 +7060,9 @@
           }
         }
       ],
-      "assembly_syntax": "divuw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "divuw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "AMOADD.W",
@@ -6554,8 +7075,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -6563,6 +7084,9 @@
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
@@ -6582,12 +7106,14 @@
         {
           "name": "rl",
           "bit_lengths": {
-            "RV32": 1,
-            "RV64": 1
+            "RV64": 1,
+            "RV32": 1
           }
         }
       ],
-      "assembly_syntax": "amoadd.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoadd.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoadd.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoadd.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoadd.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "AMOOR.D",
@@ -6606,6 +7132,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -6627,7 +7156,9 @@
           }
         }
       ],
-      "assembly_syntax": "amoor.d {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"amoor.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoor.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoor.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoor.d {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FSUB.S",
@@ -6638,24 +7169,24 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
           }
         },
         {
@@ -6666,7 +7197,9 @@
           }
         }
       ],
-      "assembly_syntax": "fsub.s {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fsub.s {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "SRA",
@@ -6698,7 +7231,9 @@
           }
         }
       ],
-      "assembly_syntax": "sra {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "sra {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FCVT.S.WU",
@@ -6709,10 +7244,10 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -6725,12 +7260,14 @@
         {
           "name": "rm",
           "bit_lengths": {
-            "RV32": 3,
-            "RV64": 3
+            "RV64": 3,
+            "RV32": 3
           }
         }
       ],
-      "assembly_syntax": "fcvt.s.wu {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.s.wu {fd}, {rs1}, {rm}"
+      }
     },
     {
       "name": "FLE.S",
@@ -6743,26 +7280,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fle.s {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fle.s {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "SRL",
@@ -6775,8 +7314,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -6789,12 +7328,14 @@
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "srl {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "srl {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "LR.D",
@@ -6813,6 +7354,9 @@
           "name": "rs1",
           "bit_lengths": {
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
@@ -6828,7 +7372,9 @@
           }
         }
       ],
-      "assembly_syntax": "lr.d {rd}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"lr.d.aqrl {}, ({})\", rd, rs1)\n} else if *aq {\n    format!(\"lr.d.aq {}, ({})\", rd, rs1)\n} else if *rl {\n    format!(\"lr.d.rl {}, ({})\", rd, rs1)\n} else {\n    format!(\"lr.d {}, ({})\", rd, rs1)\n}"
+      }
     },
     {
       "name": "FSD",
@@ -6843,13 +7389,16 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 8
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -6860,7 +7409,9 @@
           }
         }
       ],
-      "assembly_syntax": "fsd {rs2}, {imm}({rs1})"
+      "assembly_syntax": {
+        "Format": "fsd {fs2}, {imm}({rs1})"
+      }
     },
     {
       "name": "FMAX.Q",
@@ -6871,28 +7422,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "fmax.q {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fmax.q {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "SLTI",
@@ -6905,26 +7458,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "slti {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "slti {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "FDIV.S",
@@ -6935,24 +7490,24 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -6963,7 +7518,9 @@
           }
         }
       ],
-      "assembly_syntax": "fdiv.s {rd}, {rs1}, {rs2}, {rm}"
+      "assembly_syntax": {
+        "Format": "fdiv.s {fd}, {fs1}, {fs2}, {rm}"
+      }
     },
     {
       "name": "ORI",
@@ -6976,8 +7533,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
@@ -6990,12 +7547,14 @@
         {
           "name": "imm",
           "bit_lengths": {
-            "RV32": 12,
-            "RV64": 12
+            "RV64": 12,
+            "RV32": 12
           }
         }
       ],
-      "assembly_syntax": "ori {rd}, {rs1}, {imm}"
+      "assembly_syntax": {
+        "Format": "ori {rd}, {rs1}, {imm}"
+      }
     },
     {
       "name": "FCVT.D.Q",
@@ -7006,14 +7565,14 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
@@ -7027,7 +7586,9 @@
           }
         }
       ],
-      "assembly_syntax": "fcvt.d.q {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.d.q {fd}, {fs1}, {rm}"
+      }
     },
     {
       "name": "SC.W",
@@ -7040,8 +7601,8 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         },
         {
@@ -7049,20 +7610,23 @@
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
+          },
+          "restrictions": {
+            "multiple_of": 4
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "aq",
           "bit_lengths": {
-            "RV32": 1,
-            "RV64": 1
+            "RV64": 1,
+            "RV32": 1
           }
         },
         {
@@ -7073,7 +7637,9 @@
           }
         }
       ],
-      "assembly_syntax": "sc.w {rd}, {rs2}, ({rs1}), {aq}, {rl}"
+      "assembly_syntax": {
+        "RustCode": "if *aq && *rl {\n    format!(\"sc.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"sc.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"sc.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"sc.w {}, {}, ({})\", rd, rs2, rs1)\n}"
+      }
     },
     {
       "name": "FCVT.Q.D",
@@ -7084,28 +7650,23 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rm",
+          "name": "fs1",
           "bit_lengths": {
-            "RV64": 3,
-            "RV32": 3
+            "RV32": 5,
+            "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fcvt.q.d {rd}, {rs1}, {rm}"
+      "assembly_syntax": {
+        "Format": "fcvt.q.d {fd}, {fs1}"
+      }
     },
     {
       "name": "FLT.D",
@@ -7123,21 +7684,23 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5,
             "RV32": 5
           }
         },
         {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "flt.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "flt.d {rd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "REMW",
@@ -7165,7 +7728,9 @@
           }
         }
       ],
-      "assembly_syntax": "remw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "remw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "SRLW",
@@ -7193,7 +7758,9 @@
           }
         }
       ],
-      "assembly_syntax": "srlw {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "srlw {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "MUL",
@@ -7206,26 +7773,28 @@
         {
           "name": "rd",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs1",
           "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
+            "RV32": 5,
+            "RV64": 5
           }
         },
         {
           "name": "rs2",
           "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
+            "RV64": 5,
+            "RV32": 5
           }
         }
       ],
-      "assembly_syntax": "mul {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "mul {rd}, {rs1}, {rs2}"
+      }
     },
     {
       "name": "FSGNJN.D",
@@ -7236,28 +7805,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
+          "name": "fd",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
+        },
+        {
+          "name": "fs1",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         },
         {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV32": 5,
-            "RV64": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fs2",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fsgnjn.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnjn.d {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "FSGNJ.D",
@@ -7268,28 +7839,30 @@
       ],
       "operands": [
         {
-          "name": "rd",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs1",
-          "bit_lengths": {
-            "RV64": 5,
-            "RV32": 5
-          }
-        },
-        {
-          "name": "rs2",
+          "name": "fd",
           "bit_lengths": {
             "RV32": 5,
             "RV64": 5
           }
+        },
+        {
+          "name": "fs1",
+          "bit_lengths": {
+            "RV32": 5,
+            "RV64": 5
+          }
+        },
+        {
+          "name": "fs2",
+          "bit_lengths": {
+            "RV64": 5,
+            "RV32": 5
+          }
         }
       ],
-      "assembly_syntax": "fsgnj.d {rd}, {rs1}, {rs2}"
+      "assembly_syntax": {
+        "Format": "fsgnj.d {fd}, {fs1}, {fs2}"
+      }
     },
     {
       "name": "SLLIW",
@@ -7317,7 +7890,9 @@
           }
         }
       ],
-      "assembly_syntax": "slliw {rd}, {rs1}, {shamt}"
+      "assembly_syntax": {
+        "Format": "slliw {rd}, {rs1}, {shamt}"
+      }
     },
     {
       "name": "FMV.X.D",
@@ -7333,13 +7908,15 @@
           }
         },
         {
-          "name": "rs1",
+          "name": "fs1",
           "bit_lengths": {
             "RV64": 5
           }
         }
       ],
-      "assembly_syntax": "fmv.x.d {rd}, {rs1}"
+      "assembly_syntax": {
+        "Format": "fmv.x.d {rd}, {fs1}"
+      }
     }
   ]
 }

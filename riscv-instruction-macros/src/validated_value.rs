@@ -16,6 +16,9 @@ pub struct ValidatedArgs {
     name: Option<LitStr>,
     display: Option<LitStr>,
     not_zero: Option<LitBool>,
+    multiple_of: Option<LitStr>,
+    skip_display: Option<LitBool>,  // 新增：控制是否跳过Display实现
+    forbidden: Option<LitStr>,  // 新增：禁用值列表
 }
 
 /// Implements parsing logic for the `ValidatedArgs` struct from attribute tokens.
@@ -55,12 +58,26 @@ impl Parse for ValidatedArgs {
                                 args.display = Some(lit_str.clone());
                             }
                         }
+                    } else if nv.path.is_ident("multiple_of") {
+                        if let syn::Expr::Lit(expr_lit) = &nv.value {
+                            if let syn::Lit::Str(lit_str) = &expr_lit.lit {
+                                args.multiple_of = Some(lit_str.clone());
+                            }
+                        }
+                    } else if nv.path.is_ident("forbidden") {
+                        if let syn::Expr::Lit(expr_lit) = &nv.value {
+                            if let syn::Lit::Str(lit_str) = &expr_lit.lit {
+                                args.forbidden = Some(lit_str.clone());
+                            }
+                        }
                     }
                 }
-                // Handle Path attributes like `not_zero`.
+                // Handle Path attributes like `not_zero` and `skip_display`.
                 Meta::Path(path) => {
                     if path.is_ident("not_zero") {
                         args.not_zero = Some(LitBool::new(true, path.span()));
+                    } else if path.is_ident("skip_display") {
+                        args.skip_display = Some(LitBool::new(true, path.span()));
                     }
                 }
                 _ => {
@@ -132,7 +149,8 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
     let error_msg = format!("{} {{}} exceeds range ({{}} to {{}})", name_in_msg);
 
     // Generate code for the `not_zero` check if the attribute is present.
-    let zero_check = if args.not_zero.as_ref().map_or(false, |b| b.value) {
+    let not_zero_flag = args.not_zero.as_ref().map_or(false, |b| b.value);
+    let zero_check = if not_zero_flag {
         let err_msg = format!("{} cannot be zero", name_in_msg);
         quote! {
             if value == 0 {
@@ -143,23 +161,102 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! {}
     };
 
-    // Determine the format string for the `Display` implementation.
-    let display_format = args
-        .display
-        .as_ref()
-        .map(|d| d.value())
-        .unwrap_or("{}".to_string());
+    // Generate code for the `multiple_of` check if the attribute is present.
+    let multiple_check = if let Some(multiple_str) = &args.multiple_of {
+        let multiple_expr: TokenStream = multiple_str.value().parse().unwrap();
+        let err_msg = format!("{} must be a multiple of {}", name_in_msg, multiple_str.value());
+        quote! {
+            let multiple = #multiple_expr;
+            if value % multiple != 0 {
+                return Err(#err_msg.to_string());
+            }
+        }
+    } else {
+        quote! {}
+    };
 
-    // Generate the `impl` blocks for `ValidatedValue` and `Display`.
+    // Parse forbidden values and generate check
+    let (forbidden_values, forbidden_check) = if let Some(forbidden_str) = &args.forbidden {
+        let forbidden_str_value = forbidden_str.value();
+        let forbidden_values: Vec<u8> = if forbidden_str_value.is_empty() {
+            Vec::new()
+        } else {
+            forbidden_str_value
+                .split(',')
+                .filter_map(|s| {
+                    let trimmed = s.trim();
+                    if trimmed.is_empty() {
+                        None
+                    } else {
+                        trimmed.parse().ok()
+                    }
+                })
+                .collect()
+        };
+        
+        let err_msg = format!("{} value {{}} is forbidden for this instruction", name_in_msg);
+        let forbidden_check = if !forbidden_values.is_empty() {
+            quote! {
+                if Self::FORBIDDEN.contains(&value) {
+                    return Err(format!(#err_msg, value));
+                }
+            }
+        } else {
+            quote! {}
+        };
+        
+        (forbidden_values, forbidden_check)
+    } else {
+        (Vec::new(), quote! {})
+    };
+
+    // Check if Display implementation should be skipped
+    let skip_display = args.skip_display.as_ref().map_or(false, |b| b.value);
+
+    // Generate Display implementation only if not skipped
+    let display_impl = if !skip_display {
+        // Determine the format string for the `Display` implementation.
+        let display_format = args
+            .display
+            .as_ref()
+            .map(|d| d.value())
+            .unwrap_or("{}".to_string());
+
+        quote! {
+            // Implement the Display trait.
+            impl #impl_generics std::fmt::Display for #name #ty_generics #where_clause {
+                fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    write!(f, #display_format, self.0)
+                }
+            }
+        }
+    } else {
+        quote! {}
+    };
+
+    // Get multiple_of value for constants
+    let multiple_of_value = if let Some(multiple_str) = &args.multiple_of {
+        let multiple_expr: TokenStream = multiple_str.value().parse().unwrap();
+        quote! { Some(#multiple_expr) }
+    } else {
+        quote! { None }
+    };
+
+    // Generate the `impl` blocks for `ValidatedValue` and optionally `Display`.
     quote! {
         // Implement the ValidatedValue trait.
         impl #impl_generics ValidatedValue<#inner_type> for #name #ty_generics #where_clause {
             const MIN: #inner_type = #min_expr;
             const MAX: #inner_type = #max_expr;
+            const NOT_ZERO: bool = #not_zero_flag;
+            const MULTIPLE_OF: Option<#inner_type> = #multiple_of_value;
+            const FORBIDDEN: &'static [#inner_type] = &[#(#forbidden_values),*];
             type Error = String;
 
             fn new(value: #inner_type) -> Result<Self, Self::Error> {
+                #forbidden_check
                 #zero_check
+                #multiple_check
                 if value >= Self::MIN && value <= Self::MAX {
                     Ok(Self(value))
                 } else {
@@ -182,11 +279,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
             }
         }
 
-        // Implement the Display trait.
-        impl #impl_generics std::fmt::Display for #name #ty_generics #where_clause {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                write!(f, #display_format, self.0)
-            }
-        }
+        #display_impl
     }
 }
