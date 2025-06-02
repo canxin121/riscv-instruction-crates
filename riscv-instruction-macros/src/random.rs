@@ -2,11 +2,9 @@ use proc_macro2::TokenStream;
 use quote::quote;
 use syn::{Data, DeriveInput, Fields, Ident};
 
-/// Generates the implementation for the `Random` trait based on the input AST.
+/// 为 Random trait 生成实现代码
 pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
     let name: &Ident = &input_ast.ident;
-
-    // Assume the `Random` trait is visible in the deriving context.
     let random_trait_ident = quote!(Random);
     let generics = &input_ast.generics;
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
@@ -26,21 +24,18 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
             let num_variants = variants_data.len();
             let mut match_arms = TokenStream::new();
 
-            // Generate match arms for each enum variant.
             for (idx, variant) in variants_data.iter().enumerate() {
                 let variant_ident: &Ident = &variant.ident;
                 let mut field_initializers = TokenStream::new();
 
                 match &variant.fields {
                     Fields::Named(fields_named) => {
-                        // Handle named fields by calling `random_with_rng()` on each field type.
                         for field in fields_named.named.iter() {
                             let field_name_ident = field
                                 .ident
                                 .as_ref()
                                 .expect("Named field must have an identifier");
                             let field_ty = &field.ty;
-                            // Assume field types also implement Random.
                             field_initializers.extend(quote! {
                                 #field_name_ident: <#field_ty as #random_trait_ident>::random_with_rng(rng),
                             });
@@ -50,7 +45,6 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                         });
                     }
                     Fields::Unnamed(fields_unnamed) => {
-                        // Handle unnamed fields (tuples) by calling `random_with_rng()` for each element.
                         let mut tuple_fields = TokenStream::new();
                         for field in fields_unnamed.unnamed.iter() {
                             let field_ty = &field.ty;
@@ -63,7 +57,6 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                         });
                     }
                     Fields::Unit => {
-                        // Handle unit variants.
                         match_arms.extend(quote! {
                             #idx => #name::#variant_ident,
                         });
@@ -71,7 +64,6 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                 }
             }
 
-            // Generate the impl block for enums.
             quote! {
                 impl #impl_generics #random_trait_ident for #name #ty_generics #where_clause {
                     type Output = Self;
@@ -87,17 +79,14 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
             }
         }
         Data::Struct(_data_struct) => {
-            // Generate Random implementation for structs, assuming they implement ValidatedValue.
             quote! {
                 impl #impl_generics #random_trait_ident for #name #ty_generics #where_clause {
                     type Output = Self;
 
                     fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
-                        // 对于有禁用值和其他约束的类型，需要特殊处理
-                        const MAX_ATTEMPTS: usize = 10000; // 增加最大尝试次数
+                        const MAX_ATTEMPTS: usize = 10000;
                         for _ in 0..MAX_ATTEMPTS {
                             let random_value = if let Some(multiple) = Self::MULTIPLE_OF {
-                                // Generate a value that is a multiple of the required value
                                 let min_multiple = if Self::MIN >= 0 {
                                     (Self::MIN + multiple - 1) / multiple
                                 } else {
@@ -114,23 +103,18 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                                 rng.random_range(Self::MIN..=Self::MAX)
                             };
 
-                            // Check NOT_ZERO constraint
                             if Self::NOT_ZERO && random_value == 0 {
                                 continue;
                             }
 
-                            // Check forbidden values constraint
                             if Self::FORBIDDEN.contains(&random_value) {
                                 continue;
                             }
 
-                            // Use Self::new to create the instance, which will check all constraints
                             if let Ok(instance) = Self::new(random_value) {
                                 return instance;
                             }
                         }
-                        // Fallback: if we can't generate a valid value after MAX_ATTEMPTS,
-                        // panic with a descriptive error
                         panic!("Failed to generate a valid random value for {} after {} attempts. Check constraints.", 
                             stringify!(#name), MAX_ATTEMPTS);
                     }
@@ -138,7 +122,6 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
             }
         }
         Data::Union(_) => {
-            // Random derive is not supported for unions.
             syn::Error::new_spanned(name, "Random derive macro cannot be used on unions.")
                 .to_compile_error()
         }

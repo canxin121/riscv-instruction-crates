@@ -1,4 +1,4 @@
-riscv_instruction_macros::generate_riscv_instructions!("assets/riscv_instructions.json");
+riscv_instruction_macros::generate_riscv_instructions!("../assets/riscv_instructions.json");
 
 #[cfg(test)]
 mod test {

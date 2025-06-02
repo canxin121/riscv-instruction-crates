@@ -8,7 +8,6 @@ use syn::{
     Data, DeriveInput, LitBool, LitStr, Meta, Token,
 };
 
-/// Represents the arguments parsed from the `#[validated(...)]` attribute.
 #[derive(Default)]
 pub struct ValidatedArgs {
     min: Option<LitStr>,
@@ -17,22 +16,17 @@ pub struct ValidatedArgs {
     display: Option<LitStr>,
     not_zero: Option<LitBool>,
     multiple_of: Option<LitStr>,
-    skip_display: Option<LitBool>,  // 新增：控制是否跳过Display实现
-    forbidden: Option<LitStr>,  // 新增：禁用值列表
+    skip_display: Option<LitBool>,
+    forbidden: Option<LitStr>,
 }
 
-/// Implements parsing logic for the `ValidatedArgs` struct from attribute tokens.
 impl Parse for ValidatedArgs {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         let mut args = Self::default();
-
-        // Parse attribute arguments as a comma-separated list of `syn::Meta`.
-        // `syn::Meta` can be a Path (`not_zero`), NameValue (`min = "..."`), or List (`key(...)`).
         let metas = Punctuated::<Meta, Token![,]>::parse_terminated(input)?;
 
         for meta in metas {
             match meta {
-                // Handle NameValue attributes like `min = "..."`, `max = "..."`, etc.
                 Meta::NameValue(nv) => {
                     if nv.path.is_ident("min") {
                         if let syn::Expr::Lit(expr_lit) = &nv.value {
@@ -72,7 +66,6 @@ impl Parse for ValidatedArgs {
                         }
                     }
                 }
-                // Handle Path attributes like `not_zero` and `skip_display`.
                 Meta::Path(path) => {
                     if path.is_ident("not_zero") {
                         args.not_zero = Some(LitBool::new(true, path.span()));
@@ -81,7 +74,6 @@ impl Parse for ValidatedArgs {
                     }
                 }
                 _ => {
-                    // Reject other Meta types (e.g., List).
                     return Err(syn::Error::new_spanned(
                         meta,
                         "Unsupported attribute format",
@@ -94,14 +86,11 @@ impl Parse for ValidatedArgs {
     }
 }
 
-/// Generates the implementation for the `ValidatedValue` and `Display` traits.
+/// 为 ValidatedValue trait 生成实现代码
 pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
     let name = &ast.ident;
-
-    // Split generics for use in the impl block.
     let (impl_generics, ty_generics, where_clause) = ast.generics.split_for_impl();
 
-    // Parse arguments from the `#[validated(...)]` attribute.
     let attr = ast
         .attrs
         .iter()
@@ -111,7 +100,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         .parse_args()
         .expect("Failed to parse `validated` attribute arguments");
 
-    // Extract the inner type from the newtype struct.
     let inner_type = if let Data::Struct(s) = &ast.data {
         if let syn::Fields::Unnamed(f) = &s.fields {
             if f.unnamed.len() == 1 {
@@ -126,7 +114,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         panic!("DeriveValidatedValue can only be used on structs");
     };
 
-    // Parse min and max expressions from attribute arguments.
     let min_expr: TokenStream = args
         .min
         .as_ref()
@@ -142,13 +129,11 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         .parse()
         .unwrap();
 
-    // Determine the name to use in error messages, defaulting to snake_case of the struct name.
     let name_in_msg = args.name.as_ref().map(|n| n.value()).unwrap_or_else(|| {
         name.to_string().to_snake_case().replace('_', " ")
     });
     let error_msg = format!("{} {{}} exceeds range ({{}} to {{}})", name_in_msg);
 
-    // Generate code for the `not_zero` check if the attribute is present.
     let not_zero_flag = args.not_zero.as_ref().map_or(false, |b| b.value);
     let zero_check = if not_zero_flag {
         let err_msg = format!("{} cannot be zero", name_in_msg);
@@ -161,7 +146,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! {}
     };
 
-    // Generate code for the `multiple_of` check if the attribute is present.
     let multiple_check = if let Some(multiple_str) = &args.multiple_of {
         let multiple_expr: TokenStream = multiple_str.value().parse().unwrap();
         let err_msg = format!("{} must be a multiple of {}", name_in_msg, multiple_str.value());
@@ -175,7 +159,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! {}
     };
 
-    // Parse forbidden values and generate check
     let (forbidden_values, forbidden_check) = if let Some(forbidden_str) = &args.forbidden {
         let forbidden_str_value = forbidden_str.value();
         let forbidden_values: Vec<u8> = if forbidden_str_value.is_empty() {
@@ -210,12 +193,9 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         (Vec::new(), quote! {})
     };
 
-    // Check if Display implementation should be skipped
     let skip_display = args.skip_display.as_ref().map_or(false, |b| b.value);
 
-    // Generate Display implementation only if not skipped
     let display_impl = if !skip_display {
-        // Determine the format string for the `Display` implementation.
         let display_format = args
             .display
             .as_ref()
@@ -223,7 +203,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
             .unwrap_or("{}".to_string());
 
         quote! {
-            // Implement the Display trait.
             impl #impl_generics std::fmt::Display for #name #ty_generics #where_clause {
                 fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                     write!(f, #display_format, self.0)
@@ -234,7 +213,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! {}
     };
 
-    // Get multiple_of value for constants
     let multiple_of_value = if let Some(multiple_str) = &args.multiple_of {
         let multiple_expr: TokenStream = multiple_str.value().parse().unwrap();
         quote! { Some(#multiple_expr) }
@@ -242,9 +220,7 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! { None }
     };
 
-    // Generate the `impl` blocks for `ValidatedValue` and optionally `Display`.
     quote! {
-        // Implement the ValidatedValue trait.
         impl #impl_generics ValidatedValue<#inner_type> for #name #ty_generics #where_clause {
             const MIN: #inner_type = #min_expr;
             const MAX: #inner_type = #max_expr;
