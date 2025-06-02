@@ -246,7 +246,9 @@ mod test {
         println!("=== 测试完成 ===");
         println!("总体结果: {}/{} 测试通过", total_success, total_tests);
 
-        if total_success == total_tests {
+        let test_passed = total_success == total_tests;
+        
+        if test_passed {
             println!("🎉 所有测试都通过了！");
         } else {
             println!("⚠️  有 {} 个测试失败", total_tests - total_success);
@@ -288,5 +290,8 @@ mod test {
         }
 
         println!("✓ 测试文件清理完成");
+        
+        // 如果有失败的测试，让整个测试失败
+        assert!(test_passed, "有 {} 个测试失败，详细信息请查看错误日志", total_tests - total_success);
     }
 }
