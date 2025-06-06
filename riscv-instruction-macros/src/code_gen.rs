@@ -36,89 +36,49 @@ impl CodeGenerator {
             self.analyze_instruction_sharing_for_type(&self.standard_instructions);
 
         let mut restricted_register_defs = TokenStream::new();
-        let mut processed_combinations = std::collections::HashSet::new();
+        let mut restricted_immediate_defs = TokenStream::new();
+        let mut processed_register_combinations = std::collections::HashSet::new();
+        let mut processed_immediate_combinations = std::collections::HashSet::new();
 
-        // 收集所有需要的受限寄存器类型定义
+        // 收集所有需要的受限类型定义
         for analysis in [&rvc_analysis, &standard_analysis] {
             for variants in analysis.values() {
                 for variant in variants {
                     for operand in &variant.instruction.operands {
                         if let Some(restriction) = &operand.restrictions {
-                            if !restriction.forbidden_values.is_empty() {
-                                let base_type = match operand.name.as_str() {
-                                    "rd" | "rs1" | "rs2" | "rs3" => "IntegerRegister",
-                                    "rdp" | "rs1p" | "rs2p" | "rs3p" => "CompressedIntegerRegister",
-                                    "fd" | "fs1" | "fs2" | "fs3" => "FloatingPointRegister",
-                                    "fdp" | "fs1p" | "fs2p" | "fs3p" => {
-                                        "CompressedFloatingPointRegister"
-                                    }
-                                    _ if operand.name.starts_with("rs")
-                                        || operand.name.starts_with("rd") =>
-                                    {
-                                        "IntegerRegister"
-                                    }
-                                    _ if operand.name.starts_with("fs")
-                                        || operand.name.starts_with("fd") =>
-                                    {
-                                        "FloatingPointRegister"
-                                    }
-                                    _ => continue,
-                                };
-
+                            // 处理寄存器类型
+                            if self.is_register_operand(&operand.name)
+                                && !restriction.forbidden_values.is_empty()
+                            {
+                                let base_type = self.get_register_base_type(&operand.name);
                                 let type_signature =
                                     (base_type, restriction.forbidden_values.clone());
-                                if processed_combinations.insert(type_signature.clone()) {
-                                    let type_name = self.generate_restricted_register_type(
+                                if processed_register_combinations.insert(type_signature.clone()) {
+                                    let type_def = self.generate_restricted_register_type_def(
                                         base_type,
                                         &restriction.forbidden_values,
                                     );
+                                    restricted_register_defs.extend(type_def);
+                                }
+                            }
 
-                                    let type_ident =
-                                        syn::Ident::new(&type_name, proc_macro2::Span::call_site());
-                                    let forbidden_list = restriction
-                                        .forbidden_values
-                                        .iter()
-                                        .map(|v| v.to_string())
-                                        .collect::<Vec<_>>()
-                                        .join(",");
+                            // 处理立即数类型
+                            if self.is_immediate_operand(&operand.name) {
+                                let isa_base = &variant.isa_bases[0]; // 使用第一个ISA基础
+                                let bit_length = operand.bit_lengths.get(isa_base).unwrap_or(&32);
+                                let type_signature = self.create_immediate_type_signature(
+                                    &operand.name,
+                                    *bit_length,
+                                    restriction,
+                                );
 
-                                    let (max_val, display_prefix) = match base_type {
-                                        "IntegerRegister" => ("31", "x{}"),
-                                        "FloatingPointRegister" => ("31", "f{}"),
-                                        "CompressedIntegerRegister" => ("15", "x{}"),
-                                        "CompressedFloatingPointRegister" => ("15", "f{}"),
-                                        _ => ("31", "x{}"),
-                                    };
-
-                                    let (display_attr, display_impl) = if base_type
-                                        .contains("Compressed")
-                                    {
-                                        let prefix = if display_prefix.starts_with("x") {
-                                            "x"
-                                        } else {
-                                            "f"
-                                        };
-                                        (
-                                            quote! { skip_display, },
-                                            quote! {
-                                                impl std::fmt::Display for #type_ident {
-                                                    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                                                        write!(f, "{}{}", #prefix, self.0)
-                                                    }
-                                                }
-                                            },
-                                        )
-                                    } else {
-                                        (quote! { display = #display_prefix, }, quote! {})
-                                    };
-
-                                    restricted_register_defs.extend(quote! {
-                                        #[derive(Debug, Clone, Copy, PartialEq, Eq, DeriveValidatedValue, DeriveRandom)]
-                                        #[validated(min = "0", max = #max_val, name = #type_name, #display_attr forbidden = #forbidden_list)]
-                                        pub struct #type_ident(u8);
-
-                                        #display_impl
-                                    });
+                                if processed_immediate_combinations.insert(type_signature.clone()) {
+                                    let type_def = self.generate_restricted_immediate_type_def(
+                                        &operand.name,
+                                        *bit_length,
+                                        restriction,
+                                    );
+                                    restricted_immediate_defs.extend(type_def);
                                 }
                             }
                         }
@@ -139,6 +99,8 @@ impl CodeGenerator {
             #imports
 
             #restricted_register_defs
+
+            #restricted_immediate_defs
 
             #rvc_enums
 
@@ -614,10 +576,9 @@ impl CodeGenerator {
             "rd" | "rs1" | "rs2" | "rs3" => {
                 if let Some(restriction) = restrictions {
                     if !restriction.forbidden_values.is_empty() {
-                        let forbidden_values = &restriction.forbidden_values;
-                        return self.generate_restricted_register_type(
+                        return self.generate_restricted_register_type_name(
                             "IntegerRegister",
-                            forbidden_values,
+                            &restriction.forbidden_values,
                         );
                     }
                 }
@@ -626,10 +587,9 @@ impl CodeGenerator {
             "rdp" | "rs1p" | "rs2p" | "rs3p" => {
                 if let Some(restriction) = restrictions {
                     if !restriction.forbidden_values.is_empty() {
-                        let forbidden_values = &restriction.forbidden_values;
-                        return self.generate_restricted_register_type(
+                        return self.generate_restricted_register_type_name(
                             "CompressedIntegerRegister",
-                            forbidden_values,
+                            &restriction.forbidden_values,
                         );
                     }
                 }
@@ -638,10 +598,9 @@ impl CodeGenerator {
             "fd" | "fs1" | "fs2" | "fs3" => {
                 if let Some(restriction) = restrictions {
                     if !restriction.forbidden_values.is_empty() {
-                        let forbidden_values = &restriction.forbidden_values;
-                        return self.generate_restricted_register_type(
+                        return self.generate_restricted_register_type_name(
                             "FloatingPointRegister",
-                            forbidden_values,
+                            &restriction.forbidden_values,
                         );
                     }
                 }
@@ -650,90 +609,38 @@ impl CodeGenerator {
             "fdp" | "fs1p" | "fs2p" | "fs3p" => {
                 if let Some(restriction) = restrictions {
                     if !restriction.forbidden_values.is_empty() {
-                        let forbidden_values = &restriction.forbidden_values;
-                        return self.generate_restricted_register_type(
+                        return self.generate_restricted_register_type_name(
                             "CompressedFloatingPointRegister",
-                            forbidden_values,
+                            &restriction.forbidden_values,
                         );
                     }
                 }
                 "CompressedFloatingPointRegister".to_string()
             }
 
-            "imm" | "custom_imm" | "rimm" => {
+            "imm" | "custom_imm" | "rimm" | "uimm" | "nzimm" | "nzuimm" | "shamt" => {
                 if let Some(restriction) = restrictions {
-                    if let Some((min, max)) = restriction.min_max {
-                        if restriction.not_zero {
-                            return format!("NonZeroRangeImmediate<{}, {}>", min, max);
-                        } else {
-                            return format!("RangeImmediate<{}, {}>", min, max);
-                        }
-                    }
-                    if let Some(multiple) = restriction.multiple_of {
-                        if restriction.not_zero {
-                            return format!("MultipleOfNZImmediate<{}, {}>", bit_length, multiple);
-                        } else {
-                            return format!("MultipleOfImmediate<{}, {}>", bit_length, multiple);
-                        }
-                    }
-                    if restriction.not_zero {
-                        return format!("NZImmediate<{}>", bit_length);
+                    if restriction.min_max.is_some()
+                        || restriction.multiple_of.is_some()
+                        || !restriction.forbidden_values.is_empty()
+                    {
+                        return self.generate_restricted_immediate_type_name(
+                            &operand.name,
+                            *bit_length,
+                            restriction,
+                        );
                     }
                 }
-                format!("Immediate<{}>", bit_length)
-            }
-            "uimm" => {
-                if let Some(restriction) = restrictions {
-                    if let Some((min, max)) = restriction.min_max {
-                        if min >= 0 {
-                            if restriction.not_zero {
-                                return format!("NonZeroRangeImmediate<{}, {}>", min, max);
-                            } else {
-                                return format!("RangeImmediate<{}, {}>", min, max);
-                            }
-                        }
-                    }
-                    if let Some(multiple) = restriction.multiple_of {
-                        format!("MultipleOfUImmediate<{}, {}>", bit_length, multiple)
-                    } else {
-                        format!("UImmediate<{}>", bit_length)
-                    }
-                } else {
-                    format!("UImmediate<{}>", bit_length)
-                }
-            }
-            "nzimm" => {
-                if let Some(restriction) = restrictions {
-                    if let Some((min, max)) = restriction.min_max {
-                        return format!("NonZeroRangeImmediate<{}, {}>", min, max);
-                    }
-                    if let Some(multiple) = restriction.multiple_of {
-                        format!("MultipleOfNZImmediate<{}, {}>", bit_length, multiple)
-                    } else {
-                        format!("NZImmediate<{}>", bit_length)
-                    }
-                } else {
-                    format!("NZImmediate<{}>", bit_length)
-                }
-            }
-            "nzuimm" => {
-                if let Some(restriction) = restrictions {
-                    if let Some((min, max)) = restriction.min_max {
-                        if min >= 0 {
-                            return format!("NonZeroRangeImmediate<{}, {}>", min, max);
-                        }
-                    }
-                    if let Some(multiple) = restriction.multiple_of {
-                        format!("MultipleOfNZUImmediate<{}, {}>", bit_length, multiple)
-                    } else {
-                        format!("NZUImmediate<{}>", bit_length)
-                    }
-                } else {
-                    format!("NZUImmediate<{}>", bit_length)
-                }
-            }
 
-            "shamt" => format!("ShiftAmount<{}>", bit_length),
+                // 默认类型
+                match operand.name.as_str() {
+                    "uimm" => format!("UImmediate<{}>", bit_length),
+                    "nzimm" => format!("NZImmediate<{}>", bit_length),
+                    "nzuimm" => format!("NZUImmediate<{}>", bit_length),
+                    "shamt" => format!("ShiftAmount<{}>", bit_length),
+                    _ => format!("Immediate<{}>", bit_length),
+                }
+            }
 
             "csr" => "CSRAddress".to_string(),
             "rm" => "RoundingMode".to_string(),
@@ -742,60 +649,28 @@ impl CodeGenerator {
 
             name => {
                 if let Some(restriction) = restrictions {
-                    if let Some((min, max)) = restriction.min_max {
-                        if restriction.not_zero {
-                            return format!("NonZeroRangeImmediate<{}, {}>", min, max);
-                        } else {
-                            return format!("RangeImmediate<{}, {}>", min, max);
-                        }
+                    if self.is_immediate_operand(name) {
+                        return self.generate_restricted_immediate_type_name(
+                            name,
+                            *bit_length,
+                            restriction,
+                        );
                     }
-                    if let Some(multiple) = restriction.multiple_of {
-                        if restriction.not_zero {
-                            return format!("MultipleOfNZImmediate<{}, {}>", bit_length, multiple);
-                        } else {
-                            return format!("MultipleOfImmediate<{}, {}>", bit_length, multiple);
-                        }
-                    }
-                    if restriction.not_zero {
-                        return format!("NZImmediate<{}>", bit_length);
+                    if self.is_register_operand(name) && !restriction.forbidden_values.is_empty() {
+                        let base_type = self.get_register_base_type(name);
+                        return self.generate_restricted_register_type_name(
+                            base_type,
+                            &restriction.forbidden_values,
+                        );
                     }
                 }
 
+                // 默认处理
                 if name.starts_with("rs") || name.starts_with("rd") {
-                    if let Some(restriction) = restrictions {
-                        if !restriction.forbidden_values.is_empty() {
-                            let forbidden_values = &restriction.forbidden_values;
-                            return self.generate_restricted_register_type(
-                                "IntegerRegister",
-                                forbidden_values,
-                            );
-                        }
-                    }
                     "IntegerRegister".to_string()
                 } else if name.starts_with("fs") || name.starts_with("fd") {
-                    if let Some(restriction) = restrictions {
-                        if !restriction.forbidden_values.is_empty() {
-                            let forbidden_values = &restriction.forbidden_values;
-                            return self.generate_restricted_register_type(
-                                "FloatingPointRegister",
-                                forbidden_values,
-                            );
-                        }
-                    }
                     "FloatingPointRegister".to_string()
                 } else if name.ends_with("imm") || name.contains("imm") {
-                    if let Some(restriction) = restrictions {
-                        if let Some((min, max)) = restriction.min_max {
-                            if restriction.not_zero {
-                                return format!("NonZeroRangeImmediate<{}, {}>", min, max);
-                            } else {
-                                return format!("RangeImmediate<{}, {}>", min, max);
-                            }
-                        }
-                        if restriction.not_zero {
-                            return format!("NZImmediate<{}>", bit_length);
-                        }
-                    }
                     format!("Immediate<{}>", bit_length)
                 } else {
                     "u32".to_string()
@@ -804,8 +679,328 @@ impl CodeGenerator {
         }
     }
 
+    /// 判断是否为寄存器操作数
+    fn is_register_operand(&self, name: &str) -> bool {
+        matches!(
+            name,
+            "rd" | "rs1"
+                | "rs2"
+                | "rs3"
+                | "rdp"
+                | "rs1p"
+                | "rs2p"
+                | "rs3p"
+                | "fd"
+                | "fs1"
+                | "fs2"
+                | "fs3"
+                | "fdp"
+                | "fs1p"
+                | "fs2p"
+                | "fs3p"
+        ) || name.starts_with("rs")
+            || name.starts_with("rd")
+            || name.starts_with("fs")
+            || name.starts_with("fd")
+    }
+
+    /// 判断是否为立即数操作数
+    fn is_immediate_operand(&self, name: &str) -> bool {
+        matches!(
+            name,
+            "imm" | "custom_imm" | "rimm" | "uimm" | "nzimm" | "nzuimm" | "shamt"
+        ) || name.ends_with("imm")
+            || name.contains("imm")
+    }
+
+    /// 获取寄存器基础类型
+    fn get_register_base_type(&self, name: &str) -> &'static str {
+        match name {
+            "rd" | "rs1" | "rs2" | "rs3" => "IntegerRegister",
+            "rdp" | "rs1p" | "rs2p" | "rs3p" => "CompressedIntegerRegister",
+            "fd" | "fs1" | "fs2" | "fs3" => "FloatingPointRegister",
+            "fdp" | "fs1p" | "fs2p" | "fs3p" => "CompressedFloatingPointRegister",
+            _ if name.starts_with("rs") || name.starts_with("rd") => "IntegerRegister",
+            _ if name.starts_with("fs") || name.starts_with("fd") => "FloatingPointRegister",
+            _ => "IntegerRegister",
+        }
+    }
+
+    /// 创建立即数类型签名
+    fn create_immediate_type_signature(
+        &self,
+        name: &str,
+        bit_length: u8,
+        restriction: &crate::instruction_types::OperandRestriction,
+    ) -> (String, u8, Option<u8>, Vec<u8>, Option<(i64, i64)>, bool) {
+        let base_type = self.get_immediate_base_type(name);
+        let is_signed = self.is_signed_immediate(name);
+        (
+            base_type,
+            bit_length,
+            restriction.multiple_of,
+            restriction.forbidden_values.clone(),
+            restriction.min_max,
+            is_signed,
+        )
+    }
+
+    /// 获取立即数基础类型
+    fn get_immediate_base_type(&self, name: &str) -> String {
+        match name {
+            "uimm" => "unsigned".to_string(),
+            "nzimm" => "signed_nz".to_string(),
+            "nzuimm" => "unsigned_nz".to_string(),
+            "shamt" => "shift".to_string(),
+            _ if name.starts_with("nz") => "signed_nz".to_string(),
+            _ if name.starts_with("u") => "unsigned".to_string(),
+            _ => "signed".to_string(),
+        }
+    }
+
+    /// 判断是否为有符号立即数
+    fn is_signed_immediate(&self, name: &str) -> bool {
+        !matches!(name, "uimm" | "nzuimm" | "shamt") && !name.starts_with("u")
+    }
+
+    /// 生成受限立即数类型定义
+    fn generate_restricted_immediate_type_def(
+        &self,
+        operand_name: &str,
+        bit_length: u8,
+        restriction: &crate::instruction_types::OperandRestriction,
+    ) -> TokenStream {
+        let type_name =
+            self.generate_restricted_immediate_type_name(operand_name, bit_length, restriction);
+        let type_ident = syn::Ident::new(&type_name, proc_macro2::Span::call_site());
+
+        let is_signed = self.is_signed_immediate(operand_name);
+        let is_nonzero = operand_name.starts_with("nz") || operand_name.contains("nz");
+        let is_shift = operand_name == "shamt";
+
+        let (inner_type, min_expr, max_expr) = if is_shift {
+            (
+                quote! { u8 },
+                quote! { 0 },
+                quote! { ((1u16 << #bit_length) - 1) as u8 },
+            )
+        } else if is_signed {
+            (
+                quote! { i32 },
+                quote! { -(1i32 << (#bit_length - 1)) },
+                quote! { (1i32 << (#bit_length - 1)) - 1 },
+            )
+        } else {
+            // For unsigned, pre-calculate min value to avoid "if/else" in the generated attribute string.
+            let unsigned_min_val_token = if is_nonzero { quote!(1) } else { quote!(0) };
+            (
+                quote! { u32 },
+                unsigned_min_val_token,
+                quote! { ((1u64 << #bit_length) - 1) as u32 },
+            )
+        };
+
+        // 处理范围约束
+        let (final_min_ts, final_max_ts) = if let Some((min, max)) = restriction.min_max {
+            if is_signed {
+                (quote! { #min as i32 }, quote! { #max as i32 })
+            } else {
+                (quote! { #min as u32 }, quote! { #max as u32 })
+            }
+        } else {
+            (min_expr, max_expr)
+        };
+
+        let final_min_str = final_min_ts.to_string();
+        let final_max_str = final_max_ts.to_string();
+
+        // 处理禁用值 - 对于 NZ 类型，确保包含 0
+        let mut effective_forbidden_values = restriction.forbidden_values.clone();
+        if is_nonzero && !effective_forbidden_values.contains(&0) {
+            effective_forbidden_values.push(0);
+            effective_forbidden_values.sort();
+        }
+
+        let forbidden_values: Vec<proc_macro2::TokenStream> = effective_forbidden_values
+            .iter()
+            .map(|&v| {
+                if is_signed {
+                    quote! { #v as i32 }
+                } else if is_shift {
+                    quote! { #v as u8 }
+                } else {
+                    quote! { #v as u32 }
+                }
+            })
+            .collect();
+
+        let forbidden_str = effective_forbidden_values
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+
+        // 处理倍数约束
+        let multiple_attr = if let Some(multiple_val) = restriction.multiple_of {
+            let multiple_str = multiple_val.to_string();
+            quote! { multiple_of = #multiple_str, }
+        } else {
+            quote! {}
+        };
+
+        let forbidden_attr = if !forbidden_values.is_empty() {
+            quote! { forbidden = #forbidden_str, }
+        } else {
+            quote! {}
+        };
+
+        let display_attr = quote! { display = "{}", };
+
+        quote! {
+                    #[derive(Debug, Clone, Copy, PartialEq, Eq, DeriveValidatedValue, DeriveRandom)]
+                    #[validated(
+                        min = #final_min_str,
+                        max = #final_max_str,
+                        name = #type_name,
+                        #display_attr
+                        #multiple_attr
+                        #forbidden_attr
+                    )]
+                    pub struct #type_ident(#inner_type);
+        }
+    }
+
+    /// 生成受限立即数类型名称
+    fn generate_restricted_immediate_type_name(
+        &self,
+        operand_name: &str,
+        bit_length: u8,
+        restriction: &crate::instruction_types::OperandRestriction,
+    ) -> String {
+        let base_name = match operand_name {
+            "uimm" => "UImmediate".to_string(),
+            "nzimm" => "NZImmediate".to_string(),
+            "nzuimm" => "NZUImmediate".to_string(),
+            "shamt" => "ShiftAmount".to_string(),
+            _ if operand_name.starts_with("nz") => "NZImmediate".to_string(),
+            _ if operand_name.starts_with("u") => "UImmediate".to_string(),
+            _ => "Immediate".to_string(),
+        };
+
+        let mut modifiers = Vec::new();
+
+        // 添加范围修饰符
+        if let Some((min, max)) = restriction.min_max {
+            let min_str = if min < 0 {
+                format!("Neg{}", min.abs())
+            } else {
+                min.to_string()
+            };
+            let max_str = if max < 0 {
+                format!("Neg{}", max.abs())
+            } else {
+                max.to_string()
+            };
+            modifiers.push(format!("Range{}To{}", min_str, max_str));
+        }
+
+        // 添加倍数修饰符
+        if let Some(multiple) = restriction.multiple_of {
+            modifiers.push(format!("MultipleOf{}", multiple));
+        }
+
+        // 添加禁用值修饰符
+        if !restriction.forbidden_values.is_empty() {
+            let mut sorted_forbidden = restriction.forbidden_values.clone();
+            sorted_forbidden.sort();
+
+            if sorted_forbidden.len() == 1 {
+                let val = sorted_forbidden[0];
+                if val == 0 {
+                    modifiers.push("ExceptZero".to_string());
+                } else {
+                    modifiers.push(format!("Except{}", val));
+                }
+            } else if sorted_forbidden.len() <= 3 {
+                let values_str = sorted_forbidden
+                    .iter()
+                    .map(|&v| {
+                        if v == 0 {
+                            "Zero".to_string()
+                        } else {
+                            v.to_string()
+                        }
+                    })
+                    .collect::<Vec<_>>()
+                    .join("And");
+                modifiers.push(format!("Except{}", values_str));
+            } else {
+                modifiers.push(format!("ExceptMultiple{}Values", sorted_forbidden.len()));
+            }
+        }
+
+        // 组合名称
+        if modifiers.is_empty() {
+            format!("{}{}", base_name, bit_length)
+        } else {
+            format!("{}{}{}", base_name, bit_length, modifiers.join(""))
+        }
+    }
+
+    /// 生成受限寄存器类型定义
+    fn generate_restricted_register_type_def(
+        &self,
+        base_type: &str,
+        forbidden_values: &[u8],
+    ) -> TokenStream {
+        let type_name = self.generate_restricted_register_type_name(base_type, forbidden_values);
+        let type_ident = syn::Ident::new(&type_name, proc_macro2::Span::call_site());
+
+        let forbidden_list = forbidden_values
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join(",");
+
+        let (max_val, display_prefix) = match base_type {
+            "IntegerRegister" => ("31", "x{}"),
+            "FloatingPointRegister" => ("31", "f{}"),
+            "CompressedIntegerRegister" => ("15", "x{}"),
+            "CompressedFloatingPointRegister" => ("15", "f{}"),
+            _ => ("31", "x{}"),
+        };
+
+        let (display_attr, display_impl) = if base_type.contains("Compressed") {
+            let prefix = if display_prefix.starts_with("x") {
+                "x"
+            } else {
+                "f"
+            };
+            (
+                quote! { skip_display, },
+                quote! {
+                    impl std::fmt::Display for #type_ident {
+                        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                            write!(f, "{}{}", #prefix, self.0)
+                        }
+                    }
+                },
+            )
+        } else {
+            (quote! { display = #display_prefix, }, quote! {})
+        };
+
+        quote! {
+            #[derive(Debug, Clone, Copy, PartialEq, Eq, DeriveValidatedValue, DeriveRandom)]
+            #[validated(min = "0", max = #max_val, name = #type_name, #display_attr forbidden = #forbidden_list)]
+            pub struct #type_ident(u8);
+
+            #display_impl
+        }
+    }
+
     /// 生成受限寄存器类型名称
-    fn generate_restricted_register_type(
+    fn generate_restricted_register_type_name(
         &self,
         base_type: &str,
         forbidden_values: &[u8],
@@ -814,29 +1009,38 @@ impl CodeGenerator {
         sorted_forbidden.sort();
 
         let forbidden_desc = if sorted_forbidden.len() == 1 {
-            format!("Except{}", sorted_forbidden[0])
+            let val = sorted_forbidden[0];
+            if val == 0 {
+                "ExceptZero".to_string()
+            } else {
+                format!("Except{}", val)
+            }
         } else if sorted_forbidden.len() <= 3 {
             let values_str = sorted_forbidden
                 .iter()
-                .map(|v| v.to_string())
+                .map(|&v| {
+                    if v == 0 {
+                        "Zero".to_string()
+                    } else {
+                        v.to_string()
+                    }
+                })
                 .collect::<Vec<_>>()
                 .join("And");
             format!("Except{}", values_str)
         } else if sorted_forbidden.len() <= 5 {
             let values_str = sorted_forbidden
                 .iter()
-                .map(|v| v.to_string())
+                .map(|v| format!("R{}", v))
                 .collect::<Vec<_>>()
                 .join("_");
             format!("ExceptRegs{}", values_str)
         } else {
             let count = sorted_forbidden.len();
             if self.is_consecutive_range(&sorted_forbidden) {
-                format!(
-                    "ExceptRange{}To{}",
-                    sorted_forbidden[0],
-                    sorted_forbidden[sorted_forbidden.len() - 1]
-                )
+                let start = sorted_forbidden[0];
+                let end = sorted_forbidden[sorted_forbidden.len() - 1];
+                format!("ExceptRange{}To{}", start, end)
             } else {
                 format!("ExceptMultiple{}Regs", count)
             }

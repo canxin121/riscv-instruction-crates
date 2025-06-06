@@ -14,7 +14,6 @@ pub struct ValidatedArgs {
     max: Option<LitStr>,
     name: Option<LitStr>,
     display: Option<LitStr>,
-    not_zero: Option<LitBool>,
     multiple_of: Option<LitStr>,
     skip_display: Option<LitBool>,
     forbidden: Option<LitStr>,
@@ -67,9 +66,7 @@ impl Parse for ValidatedArgs {
                     }
                 }
                 Meta::Path(path) => {
-                    if path.is_ident("not_zero") {
-                        args.not_zero = Some(LitBool::new(true, path.span()));
-                    } else if path.is_ident("skip_display") {
+                    if path.is_ident("skip_display") {
                         args.skip_display = Some(LitBool::new(true, path.span()));
                     }
                 }
@@ -134,18 +131,6 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
     });
     let error_msg = format!("{} {{}} exceeds range ({{}} to {{}})", name_in_msg);
 
-    let not_zero_flag = args.not_zero.as_ref().map_or(false, |b| b.value);
-    let zero_check = if not_zero_flag {
-        let err_msg = format!("{} cannot be zero", name_in_msg);
-        quote! {
-            if value == 0 {
-                return Err(#err_msg.to_string());
-            }
-        }
-    } else {
-        quote! {}
-    };
-
     let multiple_check = if let Some(multiple_str) = &args.multiple_of {
         let multiple_expr: TokenStream = multiple_str.value().parse().unwrap();
         let err_msg = format!("{} must be a multiple of {}", name_in_msg, multiple_str.value());
@@ -161,7 +146,9 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
 
     let (forbidden_values, forbidden_check) = if let Some(forbidden_str) = &args.forbidden {
         let forbidden_str_value = forbidden_str.value();
-        let forbidden_values: Vec<u8> = if forbidden_str_value.is_empty() {
+        
+        // 根据内部类型解析禁用值
+        let forbidden_values: Vec<TokenStream> = if forbidden_str_value.is_empty() {
             Vec::new()
         } else {
             forbidden_str_value
@@ -171,7 +158,9 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
                     if trimmed.is_empty() {
                         None
                     } else {
-                        trimmed.parse().ok()
+                        // 直接使用字面量，让编译器进行类型推断
+                        let value_token: TokenStream = trimmed.parse().unwrap();
+                        Some(value_token)
                     }
                 })
                 .collect()
@@ -224,14 +213,12 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         impl #impl_generics ValidatedValue<#inner_type> for #name #ty_generics #where_clause {
             const MIN: #inner_type = #min_expr;
             const MAX: #inner_type = #max_expr;
-            const NOT_ZERO: bool = #not_zero_flag;
             const MULTIPLE_OF: Option<#inner_type> = #multiple_of_value;
             const FORBIDDEN: &'static [#inner_type] = &[#(#forbidden_values),*];
             type Error = String;
 
             fn new(value: #inner_type) -> Result<Self, Self::Error> {
                 #forbidden_check
-                #zero_check
                 #multiple_check
                 if value >= Self::MIN && value <= Self::MAX {
                     Ok(Self(value))

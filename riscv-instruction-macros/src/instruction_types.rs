@@ -57,8 +57,6 @@ pub struct Operand {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct OperandRestriction {
-    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
-    pub not_zero: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub multiple_of: Option<u8>,
     #[serde(default, skip_serializing_if = "Option::is_none")]

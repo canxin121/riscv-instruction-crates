@@ -87,25 +87,37 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                         const MAX_ATTEMPTS: usize = 10000;
                         for _ in 0..MAX_ATTEMPTS {
                             let random_value = if let Some(multiple) = Self::MULTIPLE_OF {
-                                let min_multiple = if Self::MIN >= 0 {
-                                    (Self::MIN + multiple - 1) / multiple
+                                let range_start = Self::MIN;
+                                let range_end = Self::MAX;
+                                
+                                let min_multiple = if range_start >= 0 {
+                                    (range_start + multiple - 1) / multiple
                                 } else {
-                                    Self::MIN / multiple
+                                    range_start / multiple
                                 };
-                                let max_multiple = Self::MAX / multiple;
+                                let max_multiple = range_end / multiple;
+                                
                                 if min_multiple <= max_multiple {
-                                    let multiple_factor = rng.random_range(min_multiple..=max_multiple);
+                                    let multiple_factor = if min_multiple == max_multiple {
+                                        min_multiple
+                                    } else {
+                                        rng.gen_range(min_multiple..=max_multiple)
+                                    };
                                     multiple_factor * multiple
                                 } else {
-                                    rng.random_range(Self::MIN..=Self::MAX)
+                                    if range_start == range_end {
+                                        range_start
+                                    } else {
+                                        rng.gen_range(range_start..=range_end)
+                                    }
                                 }
                             } else {
-                                rng.random_range(Self::MIN..=Self::MAX)
+                                if Self::MIN == Self::MAX {
+                                    Self::MIN
+                                } else {
+                                    rng.gen_range(Self::MIN..=Self::MAX)
+                                }
                             };
-
-                            if Self::NOT_ZERO && random_value == 0 {
-                                continue;
-                            }
 
                             if Self::FORBIDDEN.contains(&random_value) {
                                 continue;

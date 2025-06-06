@@ -886,10 +886,12 @@
             "RV64": 20
           },
           "restrictions": {
-            "not_zero": true,
             "min_max": [
               -32,
               31
+            ],
+            "forbidden_values": [
+              0
             ]
           }
         }

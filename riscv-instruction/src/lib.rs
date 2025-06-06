@@ -248,23 +248,23 @@ mod test {
 
         let test_passed = total_success == total_tests;
         
-        if test_passed {
-            println!("🎉 所有测试都通过了！");
-        } else {
-            println!("⚠️  有 {} 个测试失败", total_tests - total_success);
-        }
-
-        // 清理所有测试过程中生成的文件
         println!("\n清理测试文件...");
 
-        // 清理错误日志目录
-        if let Err(e) = std::fs::remove_dir_all("error_logs") {
-            if e.kind() != std::io::ErrorKind::NotFound {
-                println!("警告: 无法删除错误日志目录: {}", e);
+        if test_passed {
+            println!("🎉 所有测试都通过了！");
+            // 清理错误日志目录
+            if let Err(e) = std::fs::remove_dir_all("error_logs") {
+                if e.kind() != std::io::ErrorKind::NotFound {
+                    println!("警告: 无法删除错误日志目录: {}", e);
+                }
+            } else {
+                println!("✓ 错误日志目录已清理");
             }
         } else {
-            println!("✓ 错误日志目录已清理");
+            println!("⚠️  有 {} 个测试失败", total_tests - total_success);
+            println!("错误日志已保存在 'error_logs' 目录中，请查看详细信息。");
         }
+
 
         // 清理可能残留的临时文件
         let temp_files = ["output.o"];
@@ -292,6 +292,6 @@ mod test {
         println!("✓ 测试文件清理完成");
         
         // 如果有失败的测试，让整个测试失败
-        assert!(test_passed, "有 {} 个测试失败，详细信息请查看错误日志", total_tests - total_success);
+        assert!(test_passed, "有 {} 个测试失败，详细信息请查看 'error_logs' 目录中的日志文件", total_tests - total_success);
     }
 }
