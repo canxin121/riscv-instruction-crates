@@ -1,6 +1,6 @@
 # RISC-V 指令库 (RISC-V Instruction Crates)
 
-一个强类型、类型安全的 RISC-V 指令汇编库，用于生成和操作 RISC-V 指令。该库提供了完整的类型系统来表示 RISC-V 指令集，包括标准指令和压缩指令（RVC），支持 RV32 和 RV64 架构。
+一个强类型、类型安全的 RISC-V 指令汇编与操作库。本项目致力于提供一个全面的解决方案，用于生成、解析和操作 RISC-V 指令。通过过程宏自动从 `riscv-unified-db` YAML 定义生成指令集代码，确保了指令的准确性和完整性。支持 RV32 和 RV64 架构，覆盖了广泛的已批准和部分草案阶段的指令集扩展。
 
 ## 📋 目录
 
@@ -12,10 +12,11 @@
   - [📋 目录](#-目录)
   - [✨ 功能特性](#-功能特性)
     - [🔒 类型安全](#-类型安全)
-    - [🎯 完整的指令集支持](#-完整的指令集支持)
-    - [🛡️ 参数验证](#️-参数验证)
-    - [🎲 随机生成](#-随机生成)
-    - [📝 汇编输出](#-汇编输出)
+    - [🎯 广泛的指令集支持](#-广泛的指令集支持)
+    - [🎲 强大的随机生成与测试](#-强大的随机生成与测试)
+    - [📝 便捷的汇编生成](#-便捷的汇编生成)
+  - [🎯 支持的指令集](#-支持的指令集)
+    - [架构支持](#架构支持)
   - [🚀 快速开始](#-快速开始)
     - [安装](#安装)
     - [基础使用](#基础使用)
@@ -25,51 +26,132 @@
       - [`riscv-instruction`](#riscv-instruction)
       - [`riscv-instruction-types`](#riscv-instruction-types)
       - [`riscv-instruction-macros`](#riscv-instruction-macros)
-  - [🎯 支持的指令集](#-支持的指令集)
-    - [标准指令集](#标准指令集)
-    - [压缩指令集](#压缩指令集)
-    - [架构支持](#架构支持)
+      - [`riscv-instruction-parser`](#riscv-instruction-parser)
+  - [🛠️ 更新生成的资源文件](#️-更新生成的资源文件)
+    - [更新步骤](#更新步骤)
   - [🧪 测试](#-测试)
     - [测试要求](#测试要求)
     - [汇编器兼容性测试](#汇编器兼容性测试)
-  - [🔧 宏扩展](#-宏扩展)
   - [📄 许可证](#-许可证)
 
 <!-- /code_chunk_output -->
 
 
 
+
 ## ✨ 功能特性
 
 ### 🔒 类型安全
-- **强类型检查**: 所有寄存器和立即数都有严格的类型验证
+- **强类型检查**: 所有寄存器（整数、浮点、向量等）和立即数都拥有严格的类型定义和验证，在编译期捕捉错误。
+- **参数约束**: 自动校验寄存器编号、立即数范围、操作数限制（如非零、倍数、奇偶性、禁用值）等。
 
-### 🎯 完整的指令集支持
-- **标准指令集**: I、M、A、F、D、Q、Zifencei、Zicsr 扩展
-- **压缩指令集**: RVC 扩展
-- **多架构**: 支持 RV32 和 RV64
-- **自动生成**: 从 JSON 配置自动生成指令定义
+### 🎯 广泛的指令集支持
+- **多架构**: 全面支持 RV32 和 RV64 架构。
+- **标准与压缩指令**: 包括所有基础整数指令 (I)、标准扩展 (M, F, D, Q, C, B, V, H, S) 以及众多 Z* 和 S* 系列扩展。
+- **灵活的指令模块**:
+    - `merged_instructions`: 提供统一的指令视图。共享指令（跨 RV32/RV64 相同）通过 `SharedInstruction` 枚举表示，特定于架构的指令通过 `SpecificInstruction`（内含 `RV32SpecificInstruction` 和 `RV64SpecificInstruction`）表示。顶层枚举为 `RiscvInstruction { Shared(SharedInstruction), Specific(SpecificInstruction) }`。
+    - `separated_instructions`: 为 RV32 和 RV64 提供完全分离的指令集视图。顶层枚举为 `RiscvInstruction { RV32(RV32Instruction), RV64(RV64Instruction) }`，其中 `RV32Instruction` 和 `RV64Instruction` 分别包含对应架构的所有扩展指令。
+- **核心代码由JSON驱动生成**:
+    - 指令的原始定义来源于 RISC-V International 的 `riscv-unified-db` 项目中的官方 YAML 文件。
+    - 这些 YAML 文件经过 `riscv-instruction-parser` 工具（本项目的一部分）处理后，生成 [`assets/riscv_instructions.json`](assets/riscv_instructions.json) 文件。
+    - **最重要的一点是：`riscv-instruction` 主库中所有指令的枚举、结构体及其核心实现，均由 `riscv-instruction-macros` 子包中的过程宏在编译时根据 [`assets/riscv_instructions.json`](assets/riscv_instructions.json) 的内容自动生成。这意味着 [`assets/riscv_instructions.json`](assets/riscv_instructions.json) 文件直接决定了库提供的指令集和功能。**
 
-### 🛡️ 参数验证
-- **寄存器验证**: 自动验证寄存器编号范围
-- **立即数验证**: 检查立即数位长度和取值范围
-- **约束检查**: 操作数非零、倍数、禁用值等约束
 
-### 🎲 随机生成
-- **测试支持**: 内置随机指令生成功能
-- **约束感知**: 随机生成遵循所有类型约束
-- **可重现**: 支持种子控制的随机生成
+### 🎲 强大的随机生成与测试
+- **约束感知随机生成**: 内建对所有指令和操作数类型的随机生成功能，严格遵守其类型、范围和约束。
+- **可重现性**: 支持使用种子控制随机数生成过程，便于调试和复现问题。
+- **汇编器兼容性测试**: 通过生成大量随机指令并使用 GNU RISC-V 工具链 (riscv64-unknown-elf-as)进行汇编验证，确保生成的汇编代码的正确性和兼容性。绝大多数已实现的扩展都经过了此测试。
 
-### 📝 汇编输出
-- **可读格式**: 自动生成标准 RISC-V 汇编语法
-- **格式化**: 支持自定义汇编格式
-- **兼容性**: 与标准汇编器兼容
+### 📝 便捷的汇编生成
+- **标准汇编输出**: 所有指令类型均实现了 `Display` trait，可输出符合标准的 RISC-V 汇编语法。
+- **可配置格式**: 部分指令支持自定义汇编输出格式。
+- **兼容性**: 生成的汇编与主流 RISC-V 汇编器兼容。
+
+## 🎯 支持的指令集
+
+本库支持广泛的 RISC-V 指令集扩展。下表列出了主要支持的扩展及其通过 RISC-V GNU 工具链的测试情况。
+
+-   **支持状态**: ✅ 表示该扩展已在本库中实现。
+-   **GNU 工具链测试**:
+    -   ✅: 该扩展的指令已通过 `riscv64-unknown-elf-as` 汇编器兼容性测试。
+    -   ⚠️: 由于当前 `riscv64-unknown-elf-as` 工具链对这些指令的支持不完整或存在已知问题，这些扩展的部分或全部指令未进行汇编测试，但已在库中实现。
+    -   RV32/RV64: 表示测试主要针对特定架构。
+
+| 扩展               | 描述                                     | 支持状态 | GNU 工具链测试 | 备注 (来自测试配置)                              |
+| :----------------- | :--------------------------------------- | :------- | :------------- | :----------------------------------------------- |
+| **基本与标准扩展** |                                          |          |                |                                                  |
+| I                  | 基本整数指令集                           | ✅        | ✅              | `rv32i`, `rv64i`                                 |
+| M                  | 乘法和除法扩展                           | ✅        | ✅              | `rv32im`, `rv64im`                               |
+| F                  | 单精度浮点扩展                           | ✅        | ✅              | `rv32if_zfa`, `rv64if_zfa`                       |
+| D                  | 双精度浮点扩展                           | ✅        | ✅              | `rv32ifd_zfa`, `rv64ifd_zfa`                     |
+| Q                  | 四精度浮点扩展                           | ✅        | ✅              | `rv32ifdq_zfa_zfhmin`, `rv64ifdq_zfa_zfhmin`     |
+| C                  | 压缩指令扩展                             | ✅        | ✅              | `rv32ic`, `rv64ic`                               |
+| B                  | 位操作扩展 (作为 Zba/Zbb/Zbc/Zbs 的集合) | ✅        | ✅              | `rv32i_zba_zbb_zbc_zbs`, `rv64i_zba_zbb_zbc_zbs` |
+| V                  | 向量扩展                                 | ✅        | ✅              | `rv32iv`, `rv64iv`                               |
+| H                  | Hypervisor 扩展                          | ✅        | ✅              | `rv32i_h`, `rv64i_h`                             |
+| S                  | 特权架构扩展                             | ✅        | ✅              | `rv32i`, `rv64i` (S 扩展隐式包含)                |
+| **Z* 系列扩展**    |                                          |          |                |                                                  |
+| Zfh                | 半精度浮点扩展                           | ✅        | ✅              | `rv32ifd_zfh_zfa`, `rv64ifd_zfh_zfa`             |
+| Zicsr              | CSR 操作扩展                             | ✅        | ✅              | `rv32i_zicsr`, `rv64i_zicsr`                     |
+| Zifencei           | 指令流同步扩展                           | ✅        | ✅              | `rv32i_zifencei`, `rv64i_zifencei`               |
+| Zba                | 地址生成位操作扩展                       | ✅        | ✅              | `rv32i_zba`, `rv64i_zba`                         |
+| Zbb                | 基本位操作扩展                           | ✅        | ✅              | `rv32i_zbb`, `rv64i_zbb`                         |
+| Zbc                | 进位位操作扩展                           | ✅        | ✅              | `rv32i_zbc`, `rv64i_zbc`                         |
+| Zbs                | 单位位操作扩展                           | ✅        | ✅              | `rv32i_zbs`, `rv64i_zbs`                         |
+| Zbkb               | 位操作加密扩展 (基本)                    | ✅        | ✅              | `rv32i_zbkb`, `rv64i_zbkb`                       |
+| Zbkx               | 位操作加密扩展 (交叉)                    | ✅        | ✅              | `rv32i_zbkx`, `rv64i_zbkx`                       |
+| Zkn                | 加密NIST算法扩展                         | ✅        | ✅ (RV64 Only)  | `rv64i_zkn`                                      |
+| Zknd               | NIST AES解密扩展                         | ✅        | ✅              | `rv32i_zknd`, `rv64i_zknd`                       |
+| Zkne               | NIST AES加密扩展                         | ✅        | ✅              | `rv32i_zkne`, `rv64i_zkne`                       |
+| Zknh               | NIST SHA哈希扩展                         | ✅        | ✅              | `rv32i_zknh`, `rv64i_zknh`                       |
+| Zks                | 加密ShangMi算法扩展                      | ✅        | ✅              | `rv32i_zks`, `rv64i_zks`                         |
+| Zcb                | 压缩基本扩展 (位操作相关)                | ✅        | ✅              | `rv32ic_zcb_zbb_m`, `rv64ic_zcb_zbb_zba_m`       |
+| Zcd                | 压缩双精度浮点扩展                       | ✅        | ✅              | `rv32ifd_zcd`, `rv64ifd_zcd`                     |
+| Zcf                | 压缩单精度浮点扩展                       | ✅        | ✅ (RV32 Only)  | `rv32if_zcf`                                     |
+| Zcmp               | 压缩指针操作扩展                         | ✅        | ✅              | `rv32ic_zcmp`, `rv64ic_zcmp`                     |
+| Zcmop              | 压缩条件移动/原子操作扩展                | ✅        | ✅              | `rv32ic_zcmop_zacas`, `rv64ic_zcmop`             |
+| Zfbfmin            | 标量BF16转换扩展                         | ✅        | ✅              | `rv32if_zfbfmin`, `rv64if_zfbfmin`               |
+| Zicbom             | 缓存块管理扩展                           | ✅        | ✅              | `rv32i_zicbom`, `rv64i_zicbom`                   |
+| Zicboz             | 缓存块清零扩展                           | ✅        | ✅              | `rv32i_zicboz`, `rv64i_zicboz`                   |
+| Zicfilp            | 控制流完整性扩展                         | ✅        | ✅              | `rv32i_zicfilp`, `rv64i_zicfilp`                 |
+| Zicfiss            | 影子栈扩展                               | ✅        | ✅              | `rv32i_zicfiss`, `rv64i_zicfiss`                 |
+| Zicond             | 条件操作扩展                             | ✅        | ✅              | `rv32i_zicond`, `rv64i_zicond`                   |
+| Zilsd              | 负载存储成对扩展                         | ✅        | ⚠️              | 工具链尚不支持 `zilsd`                           |
+| Zimop              | 可能操作扩展                             | ✅        | ✅              | `rv32i_zimop`, `rv64i_zimop`                     |
+| Zaamo              | 原子内存操作扩展                         | ✅        | ✅              | `rv32ia_zaamo`, `rv64ia_zaamo`                   |
+| Zabha              | 字节和半字原子操作扩展                   | ✅        | ✅              | `rv32ia_zabha_zacas`, `rv64ia_zabha_zacas`       |
+| Zacas              | 比较交换原子操作扩展                     | ✅        | ✅              | `rv32ia_zacas`, `rv64ia_zacas`                   |
+| Zalasr             | 加载保留/存储条件扩展                    | ✅        | ⚠️              | 工具链尚不支持 `zalasr`                          |
+| Zalrsc             | LR/SC原子操作扩展                        | ✅        | ✅              | `rv32ia`, `rv64ia`                               |
+| Zawrs              | 等待保留集扩展                           | ✅        | ✅              | `rv32i_zawrs`, `rv64i_zawrs`                     |
+| Zvbb               | 向量基本位操作扩展                       | ✅        | ✅              | `rv32iv_zvbb`, `rv64iv_zvbb`                     |
+| Zvbc               | 向量进位位操作扩展                       | ✅        | ✅              | `rv32iv_zvbc`, `rv64iv_zvbc`                     |
+| Zvfbfmin           | 向量BF16转换扩展                         | ✅        | ✅              | `rv32ifv_zvfbfmin`, `rv64ifv_zvfbfmin`           |
+| Zvfbfwma           | 向量BF16乘加扩展                         | ✅        | ✅              | `rv32ifv_zvfbfwma`, `rv64ifv_zvfbfwma`           |
+| Zvkg               | 向量GCM/GMAC扩展                         | ✅        | ✅              | `rv32iv_zvkg`, `rv64iv_zvkg`                     |
+| Zvkned             | 向量NIST AES扩展                         | ✅        | ✅              | `rv32iv_zvkned`, `rv64iv_zvkned`                 |
+| Zvknha             | 向量NIST SHA-2扩展                       | ✅        | ✅              | `rv32iv_zvknha`, `rv64iv_zvknha`                 |
+| Zvks               | 向量ShangMi扩展                          | ✅        | ✅              | `rv32iv_zvks`, `rv64iv_zvks`                     |
+| **S* 系列扩展**    |                                          |          |                |                                                  |
+| Sdext              | 调试扩展                                 | ✅        | ✅              | `rv32i_sdext`, `rv64i_sdext`                     |
+| Smdbltrp           | M模式双陷阱扩展                          | ✅        | ✅              | `rv32i_smdbltrp_smctr`, `rv64i_smdbltrp_smctr`   |
+| Smrnmi             | M模式可恢复非屏蔽中断扩展                | ✅        | ⚠️              | 工具链尚不支持 `smrnmi`                          |
+| Svinval            | 细粒度地址转换缓存无效化扩展             | ✅        | ✅              | `rv32i_svinval`, `rv64i_svinval`                 |
+
+*注意: 上述列表可能并非详尽无遗，完整的支持细节和指令列表请参阅 [`assets/riscv_detailed_extension_report.md`](assets/riscv_detailed_extension_report.md) 或生成的代码。部分非常见或特定领域的扩展可能未在此处一一列出。*
+
+### 架构支持
+
+-   **RV32**: 完整支持 32 位 RISC-V 架构的指令。
+-   **RV64**: 完整支持 64 位 RISC-V 架构的指令。
+-   **共享指令**: 许多指令在 RV32 和 RV64 之间是共享的，本库通过 `merged_instructions` 模块提供了统一处理方式。
+-   **特定指令**: 针对 RV32 或 RV64 特有的指令（如 `ADDW` 仅用于 RV64），本库也进行了区分和支持。
 
 ## 🚀 快速开始
 
 ### 安装
 
-将以下内容添加到您的 `Cargo.toml`:
+将以下内容添加到您的 `Cargo.toml` 中：
 
 ```toml
 [dependencies]
@@ -78,1056 +160,233 @@ riscv-instruction = { git = "https://github.com/canxin121/riscv-instruction-crat
 
 ### 基础使用
 
+本库提供两种主要的指令访问方式：`merged_instructions` 和 `separated_instructions`。
+
+**1. 使用 `merged_instructions` (合并指令视图):**
+
+此模块将跨 RV32/RV64 共享的指令聚合，并为特定于架构的指令提供单独的枚举。
+
 ```rust
-use riscv_instruction::*;
+// filepath: riscv-instruction/examples/merged_usage.rs
+use riscv_instruction::merged_instructions::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 创建寄存器
-    let rd = IntegerRegister::new(1)?;  // x1
-    let rs1 = IntegerRegister::new(2)?; // x2
-    let rs2 = IntegerRegister::new(3)?; // x3
-    
-    // 创建立即数
-    let imm = Immediate::<12>::new(100)?;
-    
-    // 创建指令
-    let add_inst = StandardSharedInstruction::I(StandardISharedInstructions::ADD { 
-        rd, rs1, rs2 
-    });
-    
-    let addi_inst = StandardSharedInstruction::I(StandardISharedInstructions::ADDI { 
-        rd, rs1, imm 
-    });
-    
-    // 输出汇编
-    println!("{}", add_inst);   // add x1, x2, x3
-    println!("{}", addi_inst);  // addi x1, x2, 100
-    
+    let xd = IntegerRegister::new(1)?;
+    let xs1 = IntegerRegister::new(2)?;
+    let xs2 = IntegerRegister::new(3)?;
+
+    // 创建一个共享指令 (例如：ADD)
+    let add_inst = RiscvInstruction::Shared(SharedInstruction::I(ISharedInstructions::ADD {
+        xd,
+        xs1,
+        xs2,
+    }));
+    println!("Merged ADD: {}", add_inst); // 输出: add x1, x2, x3
+
+    // 创建一个 RV64 特有的指令 (例如：ADDW)
+    let addw_inst = RiscvInstruction::Specific(SpecificInstruction::RV64(
+        RV64SpecificInstruction::I(RV64ISpecificInstructions::ADDW { xd, xs1, xs2 }),
+    ));
+    println!("Merged ADDW (RV64): {}", addw_inst); // 输出: addw x1, x2, x3
+
+    Ok(())
+}
+```
+
+**2. 使用 `separated_instructions` (分离指令视图):**
+
+此模块为 RV32 和 RV64 提供各自独立的完整指令集枚举。
+
+```rust
+// filepath: riscv-instruction/examples/separated_usage.rs
+use riscv_instruction::separated_instructions::*;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // 创建寄存器
+    let xd = IntegerRegister::new(5)?;
+    let xs1 = IntegerRegister::new(6)?;
+    let xs2 = IntegerRegister::new(7)?;
+
+    // 创建立即数 (假设为12位立即数类型)
+    let imm12 = riscv_instruction_types::Immediate::<12>::new(200)?;
+
+    // 创建一条 RV32I 指令 (例如：ADDI)
+    let addi_rv32_inst = RiscvInstruction::RV32(RV32Instruction::I(RV32IInstructions::ADDI {
+        xd,
+        xs1,
+        imm: imm12,
+    }));
+    println!("Separated ADDI (RV32): {}", addi_rv32_inst); // 输出: addi x5, x6, 200
+
+    // 创建一条 RV64M 指令 (例如：MULW)
+    let mulw_rv64_inst =
+        RiscvInstruction::RV64(RV64Instruction::M(RV64MInstructions::MULW { xd, xs1, xs2 }));
+    println!("Separated MULW (RV64): {}", mulw_rv64_inst); // 输出: mulw x5, x6, x7
+
     Ok(())
 }
 ```
 
 ### 随机指令生成
 
+**1. 使用 `merged_instructions` 进行随机生成:**
+
 ```rust
-use riscv_instruction::*;
+// filepath: riscv-instruction/examples/random_merged_example.rs
+use riscv_instruction::merged_instructions::*;
 
 fn main() {
     let mut rng = rand::rng();
-    
-    // 生成随机标准指令
-    let random_inst = StandardSharedInstruction::random_with_rng(&mut rng);
-    println!("随机指令: {}", random_inst);
-    
-    // 生成随机压缩指令
-    let random_compressed = RVCSharedInstruction::random_with_rng(&mut rng);
-    println!("随机压缩指令: {}", random_compressed);
+
+    // 生成一个随机指令 (可能是共享的或特定于架构的)
+    let random_merged_inst = RiscvInstruction::random_with_rng(&mut rng);
+    println!("Random Merged Instruction: {}", random_merged_inst);
+
+    // 生成一个随机的共享指令
+    let random_shared_inst = SharedInstruction::random_with_rng(&mut rng);
+    println!("Random Shared Instruction: {}", random_shared_inst);
+
+    // 生成一个随机的 RV32 特有指令
+    let random_rv32_specific_inst = RV32SpecificInstruction::random_with_rng(&mut rng);
+    println!(
+        "Random RV32 Specific Instruction: {}",
+        random_rv32_specific_inst
+    );
+}
+```
+
+**2. 使用 `separated_instructions` 进行随机生成:**
+
+```rust
+// filepath: riscv-instruction/examples/random_separated_example.rs
+use riscv_instruction::separated_instructions::*;
+
+fn main() {
+    let mut rng = rand::rng();
+
+    // 生成一个随机的 RV32 指令 (来自其任何扩展)
+    let random_rv32_inst = RV32Instruction::random_with_rng(&mut rng);
+    println!("Random RV32 Instruction: {}", random_rv32_inst);
+
+    // 生成一个随机的 RV64 指令 (来自其任何扩展)
+    let random_rv64_inst = RV64Instruction::random_with_rng(&mut rng);
+    println!("Random RV64 Instruction: {}", random_rv64_inst);
+
+    // 从特定的 RV64 扩展中生成随机指令 (例如：RV64M)
+    let random_rv64m_inst = RV64MInstructions::random_with_rng(&mut rng);
+    println!("Random RV64M Instruction: {}", random_rv64m_inst);
 }
 ```
 
 ## 📁 项目结构
 
-本项目采用 Cargo 工作空间结构，包含三个子包：
+本项目采用 Cargo 工作空间结构，包含以下主要子包：
 
 ```
 riscv-instruction-crates/
-├── riscv-instruction/          # 主库，包含生成的指令定义
-├── riscv-instruction-types/    # 基础类型定义（寄存器、立即数等）
-├── riscv-instruction-macros/   # 过程宏和代码生成器
+├── riscv-instruction/          # 主库，提供用户接口，导出生成的指令枚举
+├── riscv-instruction-types/    # 基础类型定义（寄存器、立即数、约束等）
+├── riscv-instruction-macros/   # 过程宏（如 DeriveInstructionDisplay, DeriveRandom, DeriveValidatedValue）和代码生成逻辑
+├── riscv-instruction-parser/   # 从 YAML 解析指令定义并进行修复和转换的工具
 └── assets/
-    └── riscv_instructions.json # 指令定义配置文件
+    ├── riscv-unified-db/       # Git submodule: RISC-V 官方指令定义 YAML 文件
+    └── riscv_instructions.json # 从 YAML 解析并转换后供宏使用的 JSON 指令定义文件
+    └── riscv_detailed_extension_report.md # 自动生成的指令集情况报告
 ```
 
 ### 📦 子包说明
 
 #### `riscv-instruction`
-- 主要的用户接口库
-- 包含自动生成的所有 RISC-V 指令定义
-- 提供完整的指令枚举和类型
+-   用户直接交互的主库。
+-   通过 `merged_instructions` 和 `separated_instructions` 两个模块导出所有自动生成的 RISC-V 指令枚举和相关类型。
+-   包含汇编器兼容性测试。
 
 #### `riscv-instruction-types`
-- 基础类型定义
-- 寄存器类型（整数寄存器、浮点寄存器等）
-- 立即数类型（有符号、无符号、约束类型等）
-- 特殊类型（CSR 地址、舍入模式等）
+-   定义了所有基础数据类型，例如：
+    -   各种寄存器类型 (`IntegerRegister`, `FloatingPointRegister`, `VectorRegister` 等)。
+    -   参数化的立即数类型 (`Immediate<N>`, `SignedImmediate<N>`, `UImmediate<N>`)。
+    -   用于强类型检查的约束类型和特质 (`ValidatedValue`, `Random` 等)。
+    -   CSR 地址、舍入模式、Fence 模式等特殊类型。
 
 #### `riscv-instruction-macros`
-- 过程宏实现
-- 代码生成器
-- 自动从 JSON 配置生成指令定义
+-   实现了核心的过程宏：
+    -   `generate_merged_riscv_instructions!`: 从 [`assets/riscv_instructions.json`](assets/riscv_instructions.json) 生成合并视图的指令枚举。
+    -   `generate_separated_riscv_instructions!`: 从 [`assets/riscv_instructions.json`](assets/riscv_instructions.json) 生成分离视图的指令枚举。
+    -   `DeriveInstructionDisplay`: 为指令枚举自动实现 `std::fmt::Display` 以输出汇编代码。
+    -   `DeriveRandom`: 为指令枚举和操作数类型自动实现随机生成逻辑。
+    -   `DeriveValidatedValue`: 为操作数新类型自动实现值验证和约束逻辑。
+-   包含从解析后的 `Instruction` 结构列表生成 Rust 代码的逻辑。
 
-## 🎯 支持的指令集
+#### `riscv-instruction-parser`
+-   负责解析 `riscv-unified-db` 中的 YAML 指令定义文件。
+-   对解析的原始指令数据进行必要的修正和规范化（例如，统一操作数名称，处理汇编语法变体）。
+-   将处理后的指令数据序列化为 [`assets/riscv_instructions.json`](assets/riscv_instructions.json) 文件，供宏使用。
+-   生成详细的指令集支持报告 [`assets/riscv_detailed_extension_report.md`](assets/riscv_detailed_extension_report.md)。
 
-### 标准指令集
 
-| 扩展 | 描述 | 支持状态 |
-|------|------|----------|
-| I | 基础整数指令集 | ✅ |
-| M | 乘法和除法扩展 | ✅ |
-| A | 原子操作扩展 | ✅ |
-| F | 单精度浮点扩展 | ✅ |
-| D | 双精度浮点扩展 | ✅ |
-| Q | 四精度浮点扩展 | ✅ |
-| Zifencei | 指令围栏扩展 | ✅ |
-| Zicsr | CSR 操作扩展 | ✅ |
+## 🛠️ 更新生成的资源文件
 
-### 压缩指令集
+本项目的核心指令定义 ([`assets/riscv_instructions.json`](assets/riscv_instructions.json)) 和详细的扩展支持报告 ([`assets/riscv_detailed_extension_report.md`](assets/riscv_detailed_extension_report.md)) 是通过 `riscv-instruction-parser` 子包中的工具自动生成的。如果您需要基于最新的 `riscv-unified-db`（RISC-V 官方指令定义 YAML 文件）或对解析/修复逻辑进行了修改，可以按以下步骤重新生成这些文件。
 
-| 扩展 | 描述 | 支持状态 |
-|------|------|----------|
-| C | 压缩指令扩展 | ✅ |
+### 更新步骤
 
-### 架构支持
+1.  **确保 `riscv-unified-db` 是最新的**:
+    `riscv-unified-db` 是作为 Git submodule 集成在 `assets/` 目录下的。在生成文件之前，请确保它是最新的。
+    ```bash
+    # 在项目根目录下
+    git submodule update --init --recursive
+    git submodule foreach git pull origin main
+    ```
 
-- **RV32**: 32位 RISC-V 架构
-- **RV64**: 64位 RISC-V 架构
-- **共享指令**: 在两种架构间共享的指令
-- **特定指令**: 特定于某一架构的指令
+2.  **运行解析和生成脚本**:
+    `riscv-instruction-parser` 包内包含一个可执行目标，用于执行解析、修复、序列化为 JSON 以及生成 Markdown 报告的完整流程。
+    ```bash
+    # 在项目根目录下运行
+    cargo run --package riscv-instruction-parser
+    ```
+    执行此命令后，[`assets/riscv_instructions.json`](assets/riscv_instructions.json) 和 [`assets/riscv_detailed_extension_report.md`](assets/riscv_detailed_extension_report.md) 将会被更新。
+
 
 ## 🧪 测试
 
 ### 测试要求
 
-运行完整测试需要安装 RISC-V GNU 工具链：
+为了运行完整的汇编器兼容性测试，您需要在您的系统上安装 RISC-V GNU 工具链，特别是 `riscv64-unknown-elf-as` 汇编器。
 
 ```bash
-# Ubuntu/Debian
+# Ubuntu/Debian 示例
 sudo apt-get install gcc-riscv64-unknown-elf
 
-# 或从官方下载
+# 其他系统或从源码安装，请参考官方文档：
 # https://github.com/riscv-collab/riscv-gnu-toolchain
 ```
 
 ### 汇编器兼容性测试
 
-本库包含自动化测试，验证生成的指令与 GNU RISC-V 汇编器的兼容性：
+本库包含一个全面的自动化测试套件，用于验证生成的指令汇编输出与 GNU RISC-V 汇编器的兼容性。
 
 ```bash
-# 运行汇编器兼容性测试（需要安装 riscv64-unknown-elf-as）
-cargo test
+# 在 riscv-instruction 子包目录下运行测试
+cd riscv-instruction
+cargo test --release -- --show-output
 ```
 
-测试过程：
-1. 随机生成 10000 个指令
-2. 创建汇编文件
-3. 使用 `riscv64-unknown-elf-as` 汇编
-4. 验证汇编成功
-5. 重复 100 次以确保稳定性
+测试流程大致如下：
+1.  对于每个支持的指令集扩展（及其 RV32/RV64 变体）：
+    a.  随机生成大量（例如 10,000 条）该扩展的指令。
+    b.  将这些指令输出为汇编代码，并创建一个完整的汇编文件 (`.S`)。
+    c.  使用 `riscv64-unknown-elf-as` 并配合适当的 `-march` 参数尝试汇编该文件。
+    d.  验证汇编过程是否成功，无错误输出。
+2.  如果任何测试用例失败，会生成详细的错误日志和对应的汇编文件，存放在 `riscv-instruction/error_logs` 目录中，便于分析。
+
+目前，绝大多数已实现的指令扩展都已通过此兼容性测试。少数几个扩展（如 `Zalasr`, `Zilsd`, `Smrnmi`）由于当前版本的 `riscv64-unknown-elf-as` 工具链尚不支持或支持不完善，暂时无法进行汇编测试，但这部分指令的类型定义和随机生成逻辑依然在库中提供。
 
 
-## 🔧 宏扩展
-
-```rust
-// Recursive expansion of generate_riscv_instructions! macro
-// ==========================================================
-
-use riscv_instruction_macros::{DeriveInstructionDisplay, DeriveRandom, DeriveValidatedValue};
-pub use riscv_instruction_types::*;
-use std::fmt::{self, Display};
-#[derive(Debug, Clone, Copy, PartialEq, Eq, DeriveValidatedValue, DeriveRandom)]
-#[validated(
-    min = "0",
-    max = "31",
-    name = "IntegerRegisterExcept0",
-    display = "x{}",
-    forbidden = "0"
-)]
-pub struct IntegerRegisterExcept0(u8);
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, DeriveValidatedValue, DeriveRandom)]
-#[validated(
-    min = "0",
-    max = "31",
-    name = "IntegerRegisterExcept2",
-    display = "x{}",
-    forbidden = "2"
-)]
-pub struct IntegerRegisterExcept2(u8);
-
-#[doc = "RVC shared instructions for I extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum RVCISharedInstructions {
-    #[asm("c.xor {rs1p}, {rs2p}")]
-    C_XOR {
-        rs1p:CompressedIntegerRegister,rs2p:CompressedIntegerRegister
-    }, #[asm("c.jr {rs1}")]
-    C_JR {
-        rs1:IntegerRegisterExcept0
-    }, #[asm("c.ebreak ")]
-    C_EBREAK, #[asm("c.jalr {rs1}")]
-    C_JALR {
-        rs1:IntegerRegisterExcept0
-    }, #[asm("c.add {rs1}, {rs2}")]
-    C_ADD {
-        rs1:IntegerRegister,rs2:IntegerRegisterExcept0
-    }, #[asm("c.and {rs1p}, {rs2p}")]
-    C_AND {
-        rs2p:CompressedIntegerRegister,rs1p:CompressedIntegerRegister
-    }, #[asm("c.bnez {rs1p}, {imm}")]
-    C_BNEZ {
-        imm:Immediate<8> ,rs1p:CompressedIntegerRegister
-    }, #[asm("c.lwsp {rd}, {uimm}(sp)")]
-    C_LWSP {
-        rd:IntegerRegisterExcept0,uimm:MultipleOfUImmediate<6,4>
-    }, #[asm("c.srli64 {rs1p}")]
-    C_SRLI64 {
-        rs1p:CompressedIntegerRegister
-    }, #[asm("c.addi16sp sp, {nzimm}")]
-    C_ADDI16SP {
-        nzimm:MultipleOfNZImmediate<6,16>
-    }, #[asm("c.addi4spn {rdp}, sp, {nzuimm}")]
-    C_ADDI4SPN {
-        nzuimm:MultipleOfNZUImmediate<8,4> ,rdp:CompressedIntegerRegister
-    }, #[asm("c.srai64 {rs1p}")]
-    C_SRAI64 {
-        rs1p:CompressedIntegerRegister
-    }, #[asm("c.nop {nzimm}")]
-    C_NOP {
-        nzimm:NZImmediate<6>
-    }, #[asm("c.sub {rs1p}, {rs2p}")]
-    C_SUB {
-        rs1p:CompressedIntegerRegister,rs2p:CompressedIntegerRegister
-    }, #[asm("c.andi {rs1p}, {imm}")]
-    C_ANDI {
-        imm:Immediate<6> ,rs1p:CompressedIntegerRegister
-    }, #[asm("c.beqz {rs1p}, {imm}")]
-    C_BEQZ {
-        imm:Immediate<8> ,rs1p:CompressedIntegerRegister
-    }, #[asm("c.slli64 {rs1}")]
-    C_SLLI64 {
-        rs1:IntegerRegister
-    }, #[asm("c.srai {rs1p}, {nzuimm}")]
-    C_SRAI {
-        nzuimm:NZUImmediate<5> ,rs1p:CompressedIntegerRegister
-    }, #[asm("c.j {imm}")]
-    C_J {
-        imm:Immediate<11>
-    }, #[asm("c.mv {rd}, {rs2}")]
-    C_MV {
-        rd:IntegerRegister,rs2:IntegerRegisterExcept0
-    }, #[asm("c.addi {rs1}, {nzimm}")]
-    C_ADDI {
-        rs1:IntegerRegister,nzimm:NZImmediate<6>
-    }, #[asm("c.li {rd}, {imm}")]
-    C_LI {
-        rd:IntegerRegister,imm:Immediate<6>
-    }, #[asm_code("format!(\"c.lui {}, 0x{:x}\", rd, rimm.get() as u32 & 0xfffff)")]
-    C_LUI {
-        rd:IntegerRegisterExcept2,rimm:NonZeroRangeImmediate<-32,31>
-    }, #[asm("c.sw {rs2p}, {uimm}({rs1p})")]
-    C_SW {
-        uimm:MultipleOfUImmediate<5,4> ,rs2p:CompressedIntegerRegister,rs1p:CompressedIntegerRegister
-    }, #[asm("c.srli {rs1p}, {nzuimm}")]
-    C_SRLI {
-        nzuimm:NZUImmediate<5> ,rs1p:CompressedIntegerRegister
-    }, #[asm("c.swsp {rs2}, {uimm}(sp)")]
-    C_SWSP {
-        rs2:IntegerRegister,uimm:MultipleOfUImmediate<6,4>
-    }, #[asm("c.slli {rs1}, {nzuimm}")]
-    C_SLLI {
-        rs1:IntegerRegister,nzuimm:NZUImmediate<5>
-    }, #[asm("c.lw {rdp}, {uimm}({rs1p})")]
-    C_LW {
-        uimm:MultipleOfUImmediate<5,4> ,rs1p:CompressedIntegerRegister,rdp:CompressedIntegerRegister
-    }, #[asm("c.or {rs1p}, {rs2p}")]
-    C_OR {
-        rs2p:CompressedIntegerRegister,rs1p:CompressedIntegerRegister
-    }
-}
-#[doc = "RVC shared instructions for D extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum RVCDSharedInstructions {
-    #[asm("c.fsd {fs2p}, {uimm}({rs1p})")]
-    C_FSD {
-        uimm:MultipleOfUImmediate<5,8> ,rs1p:CompressedIntegerRegister,fs2p:CompressedFloatingPointRegister
-    }, #[asm("c.fsdsp {fs2}, {uimm}(sp)")]
-    C_FSDSP {
-        fs2:FloatingPointRegister,uimm:MultipleOfUImmediate<6,8>
-    }, #[asm("c.fldsp {fd}, {uimm}(sp)")]
-    C_FLDSP {
-        fd:FloatingPointRegister,uimm:MultipleOfUImmediate<6,8>
-    }, #[asm("c.fld {fdp}, {uimm}({rs1p})")]
-    C_FLD {
-        uimm:MultipleOfUImmediate<5,8> ,fdp:CompressedFloatingPointRegister,rs1p:CompressedIntegerRegister
-    }
-}
-#[doc = "RVC RV32 specific instructions for F extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum RVCRV32FSpecificInstructions {
-    #[asm("c.fswsp {fs2}, {uimm}(sp)")]
-    C_FSWSP {
-        fs2:FloatingPointRegister,uimm:MultipleOfUImmediate<6,4>
-    }, #[asm("c.flw {fdp}, {uimm}({rs1p})")]
-    C_FLW {
-        fdp:CompressedFloatingPointRegister,uimm:MultipleOfUImmediate<5,4> ,rs1p:CompressedIntegerRegister
-    }, #[asm("c.flwsp {fd}, {uimm}(sp)")]
-    C_FLWSP {
-        fd:FloatingPointRegister,uimm:MultipleOfUImmediate<6,4>
-    }, #[asm("c.fsw {fs2p}, {uimm}({rs1p})")]
-    C_FSW {
-        fs2p:CompressedFloatingPointRegister,uimm:MultipleOfUImmediate<5,4> ,rs1p:CompressedIntegerRegister
-    }
-}
-#[doc = "RVC RV32 specific instructions for I extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum RVCRV32ISpecificInstructions {
-    #[asm("c.jal {imm}")]
-    C_JAL {
-        imm:Immediate<11>
-    }
-}
-#[doc = "RVC RV64 specific instructions for I extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum RVCRV64ISpecificInstructions {
-    #[asm("c.sdsp {rs2}, {uimm}(sp)")]
-    C_SDSP {
-        rs2:IntegerRegister,uimm:MultipleOfUImmediate<6,8>
-    }, #[asm("c.ld {rdp}, {uimm}({rs1p})")]
-    C_LD {
-        uimm:MultipleOfUImmediate<5,8> ,rdp:CompressedIntegerRegister,rs1p:CompressedIntegerRegister
-    }, #[asm("c.addiw {rs1}, {imm}")]
-    C_ADDIW {
-        rs1:IntegerRegisterExcept0,imm:Immediate<6>
-    }, #[asm("c.ldsp {rd}, {uimm}(sp)")]
-    C_LDSP {
-        rd:IntegerRegisterExcept0,uimm:MultipleOfUImmediate<6,8>
-    }, #[asm("c.addw {rs1p}, {rs2p}")]
-    C_ADDW {
-        rs1p:CompressedIntegerRegister,rs2p:CompressedIntegerRegister
-    }, #[asm("c.sd {rs2p}, {uimm}({rs1p})")]
-    C_SD {
-        uimm:MultipleOfUImmediate<5,8> ,rs2p:CompressedIntegerRegister,rs1p:CompressedIntegerRegister
-    }, #[asm("c.subw {rs1p}, {rs2p}")]
-    C_SUBW {
-        rs2p:CompressedIntegerRegister,rs1p:CompressedIntegerRegister
-    }
-}
-#[doc = "RVC instructions shared across all ISA bases, grouped by extension."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum RVCSharedInstruction {
-    I(RVCISharedInstructions),
-    D(RVCDSharedInstructions),
-}
-#[doc = "RVC RV32 specific instructions, grouped by extension."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum RVCRV32SpecificInstruction {
-    F(RVCRV32FSpecificInstructions),
-    I(RVCRV32ISpecificInstructions),
-}
-#[doc = "RVC RV64 specific instructions, grouped by extension."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum RVCRV64SpecificInstruction {
-    I(RVCRV64ISpecificInstructions),
-}
-#[doc = "RVC ISA base specific instructions."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum RVCSpecificInstruction {
-    RV32(RVCRV32SpecificInstruction),
-    RV64(RVCRV64SpecificInstruction),
-}
-#[doc = "RVC RISC-V instructions, dispatching to shared or specific instructions."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum RVCInstruction {
-    #[doc = "Instructions shared across ISA bases"]
-    Shared(RVCSharedInstruction),
-    #[doc = "ISA base specific instructions"]
-    Specific(RVCSpecificInstruction),
-}
-#[doc = "Standard shared instructions for F extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardFSharedInstructions {
-    #[asm("fsgnj.s {fd}, {fs1}, {fs2}")]
-    FSGNJ_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fmax.s {fd}, {fs1}, {fs2}")]
-    FMAX_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsw {fs2}, {imm}({rs1})")]
-    FSW {
-        rs1:IntegerRegister,fs2:FloatingPointRegister,imm:Immediate<12>
-    }, #[asm("flt.s {rd}, {fs1}, {fs2}")]
-    FLT_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fmv.x.w {rd}, {fs1}")]
-    FMV_X_W {
-        rd:IntegerRegister,fs1:FloatingPointRegister
-    }, #[asm("fcvt.s.w {fd}, {rs1}, {rm}")]
-    FCVT_S_W {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }, #[asm("fmin.s {fd}, {fs1}, {fs2}")]
-    FMIN_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsgnjn.s {fd}, {fs1}, {fs2}")]
-    FSGNJN_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fnmsub.s {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FNMSUB_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fadd.s {fd}, {fs1}, {fs2}, {rm}")]
-    FADD_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fnmadd.s {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FNMADD_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsgnjx.s {fd}, {fs1}, {fs2}")]
-    FSGNJX_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsqrt.s {fd}, {fs1}, {rm}")]
-    FSQRT_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.w.s {rd}, {fs1}, {rm}")]
-    FCVT_W_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmadd.s {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FMADD_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmsub.s {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FMSUB_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("feq.s {rd}, {fs1}, {fs2}")]
-    FEQ_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("flw {fd}, {imm}({rs1})")]
-    FLW {
-        fd:FloatingPointRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("fmul.s {fd}, {fs1}, {fs2}, {rm}")]
-    FMUL_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmv.w.x {fd}, {rs1}")]
-    FMV_W_X {
-        fd:FloatingPointRegister,rs1:IntegerRegister
-    }, #[asm("fclass.s {rd}, {fs1}")]
-    FCLASS_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister
-    }, #[asm("fcvt.wu.s {rd}, {fs1}, {rm}")]
-    FCVT_WU_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsub.s {fd}, {fs1}, {fs2}, {rm}")]
-    FSUB_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.s.wu {fd}, {rs1}, {rm}")]
-    FCVT_S_WU {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }, #[asm("fle.s {rd}, {fs1}, {fs2}")]
-    FLE_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fdiv.s {fd}, {fs1}, {fs2}, {rm}")]
-    FDIV_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }
-}
-#[doc = "Standard shared instructions for D extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardDSharedInstructions {
-    #[asm("fmax.d {fd}, {fs1}, {fs2}")]
-    FMAX_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fcvt.d.w {fd}, {rs1}")]
-    FCVT_D_W {
-        fd:FloatingPointRegister,rs1:IntegerRegister
-    }, #[asm("fld {fd}, {imm}({rs1})")]
-    FLD {
-        fd:FloatingPointRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("fmin.d {fd}, {fs1}, {fs2}")]
-    FMIN_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fclass.d {rd}, {fs1}")]
-    FCLASS_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister
-    }, #[asm("fmul.d {fd}, {fs1}, {fs2}, {rm}")]
-    FMUL_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsgnjx.d {fd}, {fs1}, {fs2}")]
-    FSGNJX_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fdiv.d {fd}, {fs1}, {fs2}, {rm}")]
-    FDIV_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.d.s {fd}, {fs1}")]
-    FCVT_D_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister
-    }, #[asm("fsqrt.d {fd}, {fs1}, {rm}")]
-    FSQRT_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmadd.d {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FMADD_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.wu.d {rd}, {fs1}, {rm}")]
-    FCVT_WU_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fle.d {rd}, {fs1}, {fs2}")]
-    FLE_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fcvt.w.d {rd}, {fs1}, {rm}")]
-    FCVT_W_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fnmsub.d {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FNMSUB_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.d.wu {fd}, {rs1}")]
-    FCVT_D_WU {
-        fd:FloatingPointRegister,rs1:IntegerRegister
-    }, #[asm("fnmadd.d {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FNMADD_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmsub.d {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FMSUB_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsub.d {fd}, {fs1}, {fs2}, {rm}")]
-    FSUB_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fadd.d {fd}, {fs1}, {fs2}, {rm}")]
-    FADD_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.s.d {fd}, {fs1}, {rm}")]
-    FCVT_S_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("feq.d {rd}, {fs1}, {fs2}")]
-    FEQ_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsd {fs2}, {imm}({rs1})")]
-    FSD {
-        rs1:IntegerRegister,fs2:FloatingPointRegister,imm:Immediate<12>
-    }, #[asm("flt.d {rd}, {fs1}, {fs2}")]
-    FLT_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsgnjn.d {fd}, {fs1}, {fs2}")]
-    FSGNJN_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsgnj.d {fd}, {fs1}, {fs2}")]
-    FSGNJ_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }
-}
-#[doc = "Standard shared instructions for A extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardASharedInstructions {
-    #[asm_code("if *aq && *rl {\n    format!(\"amoswap.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoswap.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoswap.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoswap.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOSWAP_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoand.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoand.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoand.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoand.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOAND_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amomin.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomin.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomin.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomin.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMIN_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoor.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoor.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoor.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoor.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOOR_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"lr.w.aqrl {}, ({})\", rd, rs1)\n} else if *aq {\n    format!(\"lr.w.aq {}, ({})\", rd, rs1)\n} else if *rl {\n    format!(\"lr.w.rl {}, ({})\", rd, rs1)\n} else {\n    format!(\"lr.w {}, ({})\", rd, rs1)\n}")]
-    LR_W {
-        rd:IntegerRegister,rs1:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amominu.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amominu.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amominu.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amominu.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMINU_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amomax.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomax.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomax.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomax.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMAX_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoxor.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoxor.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoxor.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoxor.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOXOR_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amomaxu.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomaxu.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomaxu.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomaxu.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMAXU_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoadd.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoadd.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoadd.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoadd.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOADD_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"sc.w.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"sc.w.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"sc.w.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"sc.w {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    SC_W {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }
-}
-#[doc = "Standard shared instructions for I extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardISharedInstructions {
-    #[asm("sltu {rd}, {rs1}, {rs2}")]
-    SLTU {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("jal {rd}, {imm}")]
-    JAL {
-        rd:IntegerRegister,imm:Immediate<20>
-    }, #[asm("and {rd}, {rs1}, {rs2}")]
-    AND {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("bgeu {rs1}, {rs2}, {imm}")]
-    BGEU {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sb {rs2}, {imm}({rs1})")]
-    SB {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("jalr {rd}, {rs1}, {imm}")]
-    JALR {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("ecall ")]
-    ECALL, #[asm("lhu {rd}, {imm}({rs1})")]
-    LHU {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sub {rd}, {rs1}, {rs2}")]
-    SUB {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("lw {rd}, {imm}({rs1})")]
-    LW {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("lui {rd}, {uimm}")]
-    LUI {
-        rd:IntegerRegister,uimm:UImmediate<20>
-    }, #[asm("auipc {rd}, {uimm}")]
-    AUIPC {
-        rd:IntegerRegister,uimm:UImmediate<20>
-    }, #[asm("bge {rs1}, {rs2}, {imm}")]
-    BGE {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("add {rd}, {rs1}, {rs2}")]
-    ADD {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("xor {rd}, {rs1}, {rs2}")]
-    XOR {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("srli {rd}, {rs1}, {shamt}")]
-    SRLI {
-        rd:IntegerRegister,rs1:IntegerRegister,shamt:ShiftAmount<5>
-    }, #[asm("slt {rd}, {rs1}, {rs2}")]
-    SLT {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("srai {rd}, {rs1}, {shamt}")]
-    SRAI {
-        rd:IntegerRegister,rs1:IntegerRegister,shamt:ShiftAmount<5>
-    }, #[asm("bltu {rs1}, {rs2}, {imm}")]
-    BLTU {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("addi {rd}, {rs1}, {imm}")]
-    ADDI {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sltiu {rd}, {rs1}, {imm}")]
-    SLTIU {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("blt {rs1}, {rs2}, {imm}")]
-    BLT {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("andi {rd}, {rs1}, {imm}")]
-    ANDI {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sll {rd}, {rs1}, {rs2}")]
-    SLL {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("slli {rd}, {rs1}, {shamt}")]
-    SLLI {
-        rd:IntegerRegister,rs1:IntegerRegister,shamt:ShiftAmount<5>
-    }, #[asm("bne {rs1}, {rs2}, {imm}")]
-    BNE {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("lb {rd}, {imm}({rs1})")]
-    LB {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("beq {rs1}, {rs2}, {imm}")]
-    BEQ {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sw {rs2}, {imm}({rs1})")]
-    SW {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("lbu {rd}, {imm}({rs1})")]
-    LBU {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("or {rd}, {rs1}, {rs2}")]
-    OR {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("xori {rd}, {rs1}, {imm}")]
-    XORI {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("lh {rd}, {imm}({rs1})")]
-    LH {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("ebreak ")]
-    EBREAK, #[asm("fence {pred}, {succ}")]
-    FENCE {
-        pred:FenceMode,succ:FenceMode
-    }, #[asm("sh {rs2}, {imm}({rs1})")]
-    SH {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sra {rd}, {rs1}, {rs2}")]
-    SRA {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("srl {rd}, {rs1}, {rs2}")]
-    SRL {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("slti {rd}, {rs1}, {imm}")]
-    SLTI {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("ori {rd}, {rs1}, {imm}")]
-    ORI {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }
-}
-#[doc = "Standard shared instructions for M extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardMSharedInstructions {
-    #[asm("remu {rd}, {rs1}, {rs2}")]
-    REMU {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("mulhsu {rd}, {rs1}, {rs2}")]
-    MULHSU {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("divu {rd}, {rs1}, {rs2}")]
-    DIVU {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("rem {rd}, {rs1}, {rs2}")]
-    REM {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("mulhu {rd}, {rs1}, {rs2}")]
-    MULHU {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("mulh {rd}, {rs1}, {rs2}")]
-    MULH {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("div {rd}, {rs1}, {rs2}")]
-    DIV {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("mul {rd}, {rs1}, {rs2}")]
-    MUL {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }
-}
-#[doc = "Standard shared instructions for Zifencei extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardZifenceiSharedInstructions {
-    #[asm("fence.i")]
-    FENCE_I
-}
-#[doc = "Standard shared instructions for Zicsr extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardZicsrSharedInstructions {
-    #[asm("csrrc {rd}, {csr}, {rs1}")]
-    CSRRC {
-        rd:IntegerRegister,rs1:IntegerRegister,csr:CSRAddress
-    }, #[asm("csrrw {rd}, {csr}, {rs1}")]
-    CSRRW {
-        rd:IntegerRegister,rs1:IntegerRegister,csr:CSRAddress
-    }, #[asm("csrrsi {rd}, {csr}, {uimm}")]
-    CSRRSI {
-        rd:IntegerRegister,uimm:UImmediate<5> ,csr:CSRAddress
-    }, #[asm("csrrs {rd}, {csr}, {rs1}")]
-    CSRRS {
-        rd:IntegerRegister,rs1:IntegerRegister,csr:CSRAddress
-    }, #[asm("csrrwi {rd}, {csr}, {uimm}")]
-    CSRRWI {
-        rd:IntegerRegister,uimm:UImmediate<5> ,csr:CSRAddress
-    }, #[asm("csrrci {rd}, {csr}, {uimm}")]
-    CSRRCI {
-        rd:IntegerRegister,uimm:UImmediate<5> ,csr:CSRAddress
-    }
-}
-#[doc = "Standard shared instructions for Q extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardQSharedInstructions {
-    #[asm("fcvt.q.s {fd}, {fs1}")]
-    FCVT_Q_S {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister
-    }, #[asm("feq.q {rd}, {fs1}, {fs2}")]
-    FEQ_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsgnjx.q {fd}, {fs1}, {fs2}")]
-    FSGNJX_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("flq {fd}, {imm}({rs1})")]
-    FLQ {
-        fd:FloatingPointRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("fclass.q {rd}, {fs1}")]
-    FCLASS_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister
-    }, #[asm("fmadd.q {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FMADD_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsgnjn.q {fd}, {fs1}, {fs2}")]
-    FSGNJN_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fcvt.w.q {rd}, {fs1}, {rm}")]
-    FCVT_W_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsgnj.q {fd}, {fs1}, {fs2}")]
-    FSGNJ_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsqrt.q {fd}, {fs1}, {rm}")]
-    FSQRT_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fadd.q {fd}, {fs1}, {fs2}, {rm}")]
-    FADD_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.s.q {fd}, {fs1}, {rm}")]
-    FCVT_S_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.q.w {fd}, {rs1}")]
-    FCVT_Q_W {
-        fd:FloatingPointRegister,rs1:IntegerRegister
-    }, #[asm("flt.q {rd}, {fs1}, {fs2}")]
-    FLT_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fcvt.q.wu {fd}, {rs1}")]
-    FCVT_Q_WU {
-        fd:FloatingPointRegister,rs1:IntegerRegister
-    }, #[asm("fmsub.q {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FMSUB_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.wu.q {rd}, {fs1}, {rm}")]
-    FCVT_WU_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fsq {fs2}, {imm}({rs1})")]
-    FSQ {
-        rs1:IntegerRegister,fs2:FloatingPointRegister,imm:Immediate<12>
-    }, #[asm("fmul.q {fd}, {fs1}, {fs2}, {rm}")]
-    FMUL_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmin.q {fd}, {fs1}, {fs2}")]
-    FMIN_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fsub.q {fd}, {fs1}, {fs2}, {rm}")]
-    FSUB_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fnmsub.q {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FNMSUB_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fdiv.q {fd}, {fs1}, {fs2}, {rm}")]
-    FDIV_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fle.q {rd}, {fs1}, {fs2}")]
-    FLE_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fnmadd.q {fd}, {fs1}, {fs2}, {fs3}, {rm}")]
-    FNMADD_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister,fs3:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmax.q {fd}, {fs1}, {fs2}")]
-    FMAX_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,fs2:FloatingPointRegister
-    }, #[asm("fcvt.d.q {fd}, {fs1}, {rm}")]
-    FCVT_D_Q {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.q.d {fd}, {fs1}")]
-    FCVT_Q_D {
-        fd:FloatingPointRegister,fs1:FloatingPointRegister
-    }
-}
-#[doc = "Standard RV64 specific instructions for F extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardRV64FSpecificInstructions {
-    #[asm("fcvt.l.s {rd}, {fs1}, {rm}")]
-    FCVT_L_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.lu.s {rd}, {fs1}, {rm}")]
-    FCVT_LU_S {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.s.lu {fd}, {rs1}, {rm}")]
-    FCVT_S_LU {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }, #[asm("fcvt.s.l {fd}, {rs1}, {rm}")]
-    FCVT_S_L {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }
-}
-#[doc = "Standard RV64 specific instructions for D extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardRV64DSpecificInstructions {
-    #[asm("fcvt.lu.d {rd}, {fs1}, {rm}")]
-    FCVT_LU_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.l.d {rd}, {fs1}, {rm}")]
-    FCVT_L_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fmv.d.x {fd}, {rs1}")]
-    FMV_D_X {
-        fd:FloatingPointRegister,rs1:IntegerRegister
-    }, #[asm("fcvt.d.l {fd}, {rs1}, {rm}")]
-    FCVT_D_L {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }, #[asm("fcvt.d.lu {fd}, {rs1}, {rm}")]
-    FCVT_D_LU {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }, #[asm("fmv.x.d {rd}, {fs1}")]
-    FMV_X_D {
-        rd:IntegerRegister,fs1:FloatingPointRegister
-    }
-}
-#[doc = "Standard RV64 specific instructions for A extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardRV64ASpecificInstructions {
-    #[asm_code("if *aq && *rl {\n    format!(\"amoswap.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoswap.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoswap.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoswap.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOSWAP_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amomin.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomin.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomin.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomin.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMIN_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amomax.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomax.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomax.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomax.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMAX_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoand.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoand.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoand.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoand.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOAND_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amomaxu.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amomaxu.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amomaxu.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amomaxu.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMAXU_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"sc.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"sc.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"sc.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"sc.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    SC_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoxor.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoxor.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoxor.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoxor.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOXOR_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoadd.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoadd.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoadd.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoadd.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOADD_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amominu.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amominu.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amominu.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amominu.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOMINU_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"amoor.d.aqrl {}, {}, ({})\", rd, rs2, rs1)\n} else if *aq {\n    format!(\"amoor.d.aq {}, {}, ({})\", rd, rs2, rs1)\n} else if *rl {\n    format!(\"amoor.d.rl {}, {}, ({})\", rd, rs2, rs1)\n} else {\n    format!(\"amoor.d {}, {}, ({})\", rd, rs2, rs1)\n}")]
-    AMOOR_D {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister,aq:bool,rl:bool
-    }, #[asm_code("if *aq && *rl {\n    format!(\"lr.d.aqrl {}, ({})\", rd, rs1)\n} else if *aq {\n    format!(\"lr.d.aq {}, ({})\", rd, rs1)\n} else if *rl {\n    format!(\"lr.d.rl {}, ({})\", rd, rs1)\n} else {\n    format!(\"lr.d {}, ({})\", rd, rs1)\n}")]
-    LR_D {
-        rd:IntegerRegister,rs1:IntegerRegister,aq:bool,rl:bool
-    }
-}
-#[doc = "Standard RV64 specific instructions for I extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardRV64ISpecificInstructions {
-    #[asm("addw {rd}, {rs1}, {rs2}")]
-    ADDW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("subw {rd}, {rs1}, {rs2}")]
-    SUBW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("sllw {rd}, {rs1}, {rs2}")]
-    SLLW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("sd {rs2}, {imm}({rs1})")]
-    SD {
-        rs1:IntegerRegister,rs2:IntegerRegister,imm:Immediate<12>
-    }, #[asm("srliw {rd}, {rs1}, {shamt}")]
-    SRLIW {
-        rd:IntegerRegister,rs1:IntegerRegister,shamt:ShiftAmount<5>
-    }, #[asm("lwu {rd}, {imm}({rs1})")]
-    LWU {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sraw {rd}, {rs1}, {rs2}")]
-    SRAW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("addiw {rd}, {rs1}, {imm}")]
-    ADDIW {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("ld {rd}, {imm}({rs1})")]
-    LD {
-        rd:IntegerRegister,rs1:IntegerRegister,imm:Immediate<12>
-    }, #[asm("sraiw {rd}, {rs1}, {shamt}")]
-    SRAIW {
-        rd:IntegerRegister,rs1:IntegerRegister,shamt:ShiftAmount<5>
-    }, #[asm("srlw {rd}, {rs1}, {rs2}")]
-    SRLW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("slliw {rd}, {rs1}, {shamt}")]
-    SLLIW {
-        rd:IntegerRegister,rs1:IntegerRegister,shamt:ShiftAmount<5>
-    }
-}
-#[doc = "Standard RV64 specific instructions for M extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardRV64MSpecificInstructions {
-    #[asm("remuw {rd}, {rs1}, {rs2}")]
-    REMUW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("mulw {rd}, {rs1}, {rs2}")]
-    MULW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("divw {rd}, {rs1}, {rs2}")]
-    DIVW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("divuw {rd}, {rs1}, {rs2}")]
-    DIVUW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }, #[asm("remw {rd}, {rs1}, {rs2}")]
-    REMW {
-        rd:IntegerRegister,rs1:IntegerRegister,rs2:IntegerRegister
-    }
-}
-#[doc = "Standard RV64 specific instructions for Q extension"]
-#[derive(Debug,Clone,PartialEq,DeriveInstructionDisplay,DeriveRandom)]
-#[rustfmt::skip]
-pub enum StandardRV64QSpecificInstructions {
-    #[asm("fcvt.lu.q {rd}, {fs1}, {rm}")]
-    FCVT_LU_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.l.q {rd}, {fs1}, {rm}")]
-    FCVT_L_Q {
-        rd:IntegerRegister,fs1:FloatingPointRegister,rm:RoundingMode
-    }, #[asm("fcvt.q.l {fd}, {rs1}, {rm}")]
-    FCVT_Q_L {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }, #[asm("fcvt.q.lu {fd}, {rs1}, {rm}")]
-    FCVT_Q_LU {
-        fd:FloatingPointRegister,rs1:IntegerRegister,rm:RoundingMode
-    }
-}
-#[doc = "Standard instructions shared across all ISA bases, grouped by extension."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum StandardSharedInstruction {
-    F(StandardFSharedInstructions),
-    D(StandardDSharedInstructions),
-    A(StandardASharedInstructions),
-    I(StandardISharedInstructions),
-    M(StandardMSharedInstructions),
-    Zifencei(StandardZifenceiSharedInstructions),
-    Zicsr(StandardZicsrSharedInstructions),
-    Q(StandardQSharedInstructions),
-}
-#[doc = "Standard RV64 specific instructions, grouped by extension."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum StandardRV64SpecificInstruction {
-    F(StandardRV64FSpecificInstructions),
-    D(StandardRV64DSpecificInstructions),
-    A(StandardRV64ASpecificInstructions),
-    I(StandardRV64ISpecificInstructions),
-    M(StandardRV64MSpecificInstructions),
-    Q(StandardRV64QSpecificInstructions),
-}
-#[doc = "Standard ISA base specific instructions."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum StandardSpecificInstruction {
-    RV64(StandardRV64SpecificInstruction),
-}
-#[doc = "Standard RISC-V instructions, dispatching to shared or specific instructions."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum StandardInstruction {
-    #[doc = "Instructions shared across ISA bases"]
-    Shared(StandardSharedInstruction),
-    #[doc = "ISA base specific instructions"]
-    Specific(StandardSpecificInstruction),
-}
-#[doc = r" Main RISC-V instruction enum, dispatching to Standard or RVC instructions."]
-#[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
-pub enum RiscvInstruction {
-    #[doc = "Standard RISC-V instructions"]
-    Standard(StandardInstruction),
-    #[doc = "RISC-V Compressed instructions"]
-    RVC(RVCInstruction),
-}
-```
 
 ## 📄 许可证
 
-本项目使用 MIT 或 Apache-2.0 双重许可证。详见：
+本项目采用 MIT 或 Apache-2.0 双重许可证。详见：
 
-- [MIT License](LICENSE-MIT)
-- [Apache License 2.0](LICENSE-APACHE)
+-   [MIT License](LICENSE-MIT)
+-   [Apache License 2.0](LICENSE-APACHE)

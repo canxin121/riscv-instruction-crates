@@ -96,7 +96,7 @@ pub fn impl_instruction_display(ast: &DeriveInput) -> TokenStream {
                     if format_str.contains('{') {
                         quote! {
                             {
-                                let result = format!(#format_str, #(#field_names = #field_names),*);
+                                let result = format!(#format_str);
                                 write!(f, "{}", result)
                             }
                         }
