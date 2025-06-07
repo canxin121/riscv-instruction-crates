@@ -290,7 +290,7 @@ riscv-instruction-crates/
 ├── riscv-instruction-macros/   # 过程宏（如 DeriveInstructionDisplay, DeriveRandom, DeriveValidatedValue）和代码生成逻辑
 ├── riscv-instruction-parser/   # 从 YAML 解析指令定义并进行修复和转换的工具
 └── assets/
-    ├── riscv-unified-db/       # Git submodule: RISC-V 官方指令定义 YAML 文件
+    ├── riscv-unified-db/       # 在需要更新时手动拉取 RISC-V 官方指令定义的 YAML 文件
     └── riscv_instructions.json # 从 YAML 解析并转换后供宏使用的 JSON 指令定义文件
     └── riscv_detailed_extension_report.md # 自动生成的指令集情况报告
 ```
@@ -331,12 +331,10 @@ riscv-instruction-crates/
 
 ### 更新步骤
 
-1.  **确保 `riscv-unified-db` 是最新的**:
-    `riscv-unified-db` 是作为 Git submodule 集成在 `assets/` 目录下的。在生成文件之前，请确保它是最新的。
+1.  **拉取最新的 `riscv-unified-db` **:
     ```bash
     # 在项目根目录下
-    git submodule update --init --recursive
-    git submodule foreach git pull origin main
+    git clone --depth 1 https://github.com/riscv-software-src/riscv-unified-db assets/riscv-unified-db
     ```
 
 2.  **运行解析和生成脚本**:
