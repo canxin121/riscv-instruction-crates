@@ -21,10 +21,6 @@ jobs:
       # 1. 检出项目代码
       - name: Checkout project code
         uses: actions/checkout@v4
-        with:
-          # 'true' 表示非递归地拉取子模块
-          # 这会拉取 assets/riscv-unified-db, 但不会拉取它自己的子模块
-          submodules: true
 
       # 2. (仅在缓存未命中时) 克隆 RISC-V GNU Toolchain 源码
       - name: Clone RISC-V GNU Toolchain repository
@@ -75,20 +71,24 @@ jobs:
       # 8. 安装和设置 Rust 工具链
       - name: Setup Rust toolchain
         run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+      
+      # 9. 准备所需的assets
+      - name: Clone riscv-unified-db
+        run: git clone --depth 1 https://github.com/riscv-software-src/riscv-unified-db assets/riscv-unified-db
 
-      # 9. 构建项目
+      # 10. 构建项目
       - name: Build project
         run: cargo build --release --verbose
 
-      # 10. 运行项目
+      # 11. 运行项目
       - name: Run project
         run: cargo run --release --verbose
 
-      # 11. 确保重新编译以进行测试
+      # 12. 确保重新编译以进行测试
       # ensure recompile
       - name: Touch source file to ensure recompile for test
         run: touch riscv-instruction/src/lib.rs
 
-      # 12. 运行测试
+      # 13. 运行测试
       - name: Run tests
         run: cargo test --release --verbose -- --show-output
