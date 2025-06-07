@@ -17,6 +17,7 @@ pub struct ValidatedArgs {
     multiple_of: Option<LitStr>,
     skip_display: Option<LitBool>,
     forbidden: Option<LitStr>,
+    odd_only: Option<LitBool>,
 }
 
 impl Parse for ValidatedArgs {
@@ -63,11 +64,19 @@ impl Parse for ValidatedArgs {
                                 args.forbidden = Some(lit_str.clone());
                             }
                         }
+                    } else if nv.path.is_ident("odd_only") {
+                        if let syn::Expr::Lit(expr_lit) = &nv.value {
+                            if let syn::Lit::Str(lit_str) = &expr_lit.lit {
+                                args.odd_only = Some(LitBool::new(lit_str.value() == "true", lit_str.span()));
+                            }
+                        }
                     }
                 }
                 Meta::Path(path) => {
                     if path.is_ident("skip_display") {
                         args.skip_display = Some(LitBool::new(true, path.span()));
+                    } else if path.is_ident("odd_only") {
+                        args.odd_only = Some(LitBool::new(true, path.span()));
                     }
                 }
                 _ => {
@@ -144,6 +153,17 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! {}
     };
 
+    let odd_only_check = if args.odd_only.as_ref().map_or(false, |b| b.value) {
+        let err_msg = format!("{} must be odd", name_in_msg);
+        quote! {
+            if value % 2 == 0 {
+                return Err(#err_msg.to_string());
+            }
+        }
+    } else {
+        quote! {}
+    };
+
     let (forbidden_values, forbidden_check) = if let Some(forbidden_str) = &args.forbidden {
         let forbidden_str_value = forbidden_str.value();
         
@@ -209,17 +229,25 @@ pub fn impl_validated_value(ast: &DeriveInput) -> TokenStream {
         quote! { None }
     };
 
+    let odd_only_value = if args.odd_only.as_ref().map_or(false, |b| b.value) {
+        quote! { true }
+    } else {
+        quote! { false }
+    };
+
     quote! {
         impl #impl_generics ValidatedValue<#inner_type> for #name #ty_generics #where_clause {
             const MIN: #inner_type = #min_expr;
             const MAX: #inner_type = #max_expr;
             const MULTIPLE_OF: Option<#inner_type> = #multiple_of_value;
             const FORBIDDEN: &'static [#inner_type] = &[#(#forbidden_values),*];
+            const ODD_ONLY: bool = #odd_only_value;
             type Error = String;
 
             fn new(value: #inner_type) -> Result<Self, Self::Error> {
                 #forbidden_check
                 #multiple_check
+                #odd_only_check
                 if value >= Self::MIN && value <= Self::MAX {
                     Ok(Self(value))
                 } else {

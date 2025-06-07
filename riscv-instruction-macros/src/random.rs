@@ -89,14 +89,14 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                             let random_value = if let Some(multiple) = Self::MULTIPLE_OF {
                                 let range_start = Self::MIN;
                                 let range_end = Self::MAX;
-                                
+
                                 let min_multiple = if range_start >= 0 {
                                     (range_start + multiple - 1) / multiple
                                 } else {
                                     range_start / multiple
                                 };
                                 let max_multiple = range_end / multiple;
-                                
+
                                 if min_multiple <= max_multiple {
                                     let multiple_factor = if min_multiple == max_multiple {
                                         min_multiple
@@ -105,6 +105,38 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                                     };
                                     multiple_factor * multiple
                                 } else {
+                                    if range_start == range_end {
+                                        range_start
+                                    } else {
+                                        rng.gen_range(range_start..=range_end)
+                                    }
+                                }
+                            } else if Self::ODD_ONLY {
+                                // 生成奇数值
+                                let range_start = Self::MIN;
+                                let range_end = Self::MAX;
+                                
+                                // 确保起始值是奇数
+                                let odd_start = if range_start % 2 == 0 {
+                                    range_start + 1
+                                } else {
+                                    range_start
+                                };
+                                
+                                // 确保结束值是奇数
+                                let odd_end = if range_end % 2 == 0 {
+                                    range_end - 1
+                                } else {
+                                    range_end
+                                };
+                                
+                                if odd_start <= odd_end {
+                                    // 计算奇数个数
+                                    let odd_count = (odd_end - odd_start) / 2 + 1;
+                                    let random_index = rng.gen_range(0..odd_count);
+                                    odd_start + random_index * 2
+                                } else {
+                                    // 没有有效的奇数值，回退到范围生成
                                     if range_start == range_end {
                                         range_start
                                     } else {
@@ -127,7 +159,7 @@ pub fn impl_random_derive(input_ast: &DeriveInput) -> TokenStream {
                                 return instance;
                             }
                         }
-                        panic!("Failed to generate a valid random value for {} after {} attempts. Check constraints.", 
+                        panic!("Failed to generate a valid random value for {} after {} attempts. Check constraints.",
                             stringify!(#name), MAX_ATTEMPTS);
                     }
                 }

@@ -2,7 +2,6 @@ extern crate proc_macro;
 
 mod code_gen;
 mod instruction_display;
-mod instruction_types;
 mod random;
 mod validated_value;
 
@@ -10,8 +9,8 @@ use std::{env, fs, path::PathBuf};
 
 use code_gen::CodeGenerator;
 use instruction_display::impl_instruction_display;
-use instruction_types::RiscvInstructionDef;
 use random::impl_random_derive;
+use riscv_instruction_parser::types::Instruction;
 use validated_value::impl_validated_value;
 
 use syn::parse_macro_input;
@@ -42,9 +41,11 @@ pub fn derive_validated_value(input: proc_macro::TokenStream) -> proc_macro::Tok
     proc_macro::TokenStream::from(output_stream)
 }
 
-/// 从 JSON 文件生成 RISC-V 指令枚举
+/// 从 JSON 文件生成合并的 RISC-V 指令枚举（共享指令会合并，按 RV32/RV64 分类）
 #[proc_macro]
-pub fn generate_riscv_instructions(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+pub fn generate_merged_riscv_instructions(
+    input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
     let input_str = input.to_string();
     let json_path = input_str.trim_matches('"');
 
@@ -54,14 +55,34 @@ pub fn generate_riscv_instructions(input: proc_macro::TokenStream) -> proc_macro
 
     let file_content = fs::read_to_string(&path)
         .unwrap_or_else(|e| panic!("Failed to read {}: {}", path.display(), e));
-    let instructions: RiscvInstructionDef =
+    let instructions: Vec<Instruction> =
         serde_json::from_str(&file_content).expect("Failed to parse JSON");
 
-    let code_generator = CodeGenerator::new(
-        instructions.rvc_instructions,
-        instructions.standard_instructions,
-    );
+    let code_generator = CodeGenerator::new(instructions);
 
     let generated_code = code_generator.generate_instruction_enum();
+    proc_macro::TokenStream::from(generated_code)
+}
+
+/// 从 JSON 文件生成分离的 RISC-V 指令枚举（完全按扩展和 ISA 基础分开，不合并）
+#[proc_macro]
+pub fn generate_separated_riscv_instructions(
+    input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    let input_str = input.to_string();
+    let json_path = input_str.trim_matches('"');
+
+    let manifest_dir = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
+    let mut path = PathBuf::from(manifest_dir);
+    path.push(json_path);
+
+    let file_content = fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("Failed to read {}: {}", path.display(), e));
+    let instructions: Vec<Instruction> =
+        serde_json::from_str(&file_content).expect("Failed to parse JSON");
+
+    let code_generator = CodeGenerator::new(instructions);
+
+    let generated_code = code_generator.generate_separated_instruction_enum();
     proc_macro::TokenStream::from(generated_code)
 }
