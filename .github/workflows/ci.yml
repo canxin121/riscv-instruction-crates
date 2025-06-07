@@ -2,7 +2,6 @@ name: Cargo Build & Test with Full RISC-V Toolchain
 
 on:
   push:
-  pull_request:
 
 env:
   CARGO_TERM_COLOR: always
@@ -23,7 +22,9 @@ jobs:
       - name: Checkout project code
         uses: actions/checkout@v4
         with:
-          submodules: "recursive"
+          # 'true' 表示非递归地拉取子模块
+          # 这会拉取 assets/riscv-unified-db, 但不会拉取它自己的子模块
+          submodules: true
 
       # 2. (仅在缓存未命中时) 克隆 RISC-V GNU Toolchain 源码
       - name: Clone RISC-V GNU Toolchain repository
