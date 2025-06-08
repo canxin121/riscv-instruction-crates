@@ -5,7 +5,6 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RISCV_TOOLCHAIN_VERSION: "2025.06.07"
 
 jobs:
   build_and_test:
@@ -18,77 +17,38 @@ jobs:
           - stable
 
     steps:
-      # 1. 检出项目代码
+      # 检出项目代码
       - name: Checkout project code
         uses: actions/checkout@v4
 
-      # 2. (仅在缓存未命中时) 克隆 RISC-V GNU Toolchain 源码
-      - name: Clone RISC-V GNU Toolchain repository
-        if: steps.cache-riscv-toolchain.outputs.cache-hit != 'true'
-        # 使用 env 变量引用版本号
-        run: git clone --depth 1 --branch ${{ env.RISCV_TOOLCHAIN_VERSION }} https://github.com/riscv/riscv-gnu-toolchain
-
-      # 3. 缓存已编译的 RISC-V 工具链
-      - name: Cache RISC-V GNU Toolchain
-        id: cache-riscv-toolchain
-        uses: actions/cache@v4
-        with:
-          path: /opt/riscv
-          # 在 key 中也使用 env 变量
-          key: ${{ runner.os }}-riscv-gnu-toolchain-${{ env.RISCV_TOOLCHAIN_VERSION }}
-
-      # 4. (仅在缓存未命中时) 安装编译所需的依赖
-      - name: Install build dependencies
-        if: steps.cache-riscv-toolchain.outputs.cache-hit != 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y autoconf automake autotools-dev curl python3 python3-pip python3-tomli libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
-
-      # 5. (仅在缓存未命中时) 编译并安装完整的 RISC-V 工具链
-      - name: Build and Install RISC-V GNU Toolchain
-        if: steps.cache-riscv-toolchain.outputs.cache-hit != 'true'
-        run: |
-          echo "Cache not found, building toolchain from source..."
-          cd riscv-gnu-toolchain
-          git submodule update --init --recursive
-          ./configure --prefix=/opt/riscv --enable-multilib
-          make -j$(nproc)
-          sudo make install
-          # 赋予权限以便缓存操作可以读取
-          sudo chown -R $USER:$USER /opt/riscv
-          cd ..
-      # 6. 将工具链路径添加到环境变量，使其在后续步骤中可用
-      - name: Add RISC-V Toolchain to PATH
-        run: |
-          echo "Adding /opt/riscv/bin to GITHUB_PATH"
-          echo "/opt/riscv/bin" >> $GITHUB_PATH
-
-      # 7. 验证工具链安装成功 (可选，但推荐)
-      - name: Verify RISC-V Toolchain installation
-        run: |
-          riscv64-unknown-elf-gcc --version
-
-      # 8. 安装和设置 Rust 工具链
+      # 安装和设置 Rust 工具链
       - name: Setup Rust toolchain
         run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-      
-      # 9. 准备所需的assets
+
+      # 将预编译的 RISC-V 工具链添加到 PATH
+      - name: Prepare RISC-V toolchain
+        run: |
+          # 检查链接情况
+          ldd ${{ github.workspace }}/assets/riscv64-unknown-elf-as
+          # 添加 assets 目录到 PATH
+          echo "${{ github.workspace }}/assets" >> $GITHUB_ENV
+
+      # 准备所需的 riscv-unified-db 数据库
       - name: Clone riscv-unified-db
         run: git clone --depth 1 https://github.com/riscv-software-src/riscv-unified-db assets/riscv-unified-db
 
-      # 10. 构建项目
+      # 构建项目
       - name: Build project
         run: cargo build --release --verbose
 
-      # 11. 运行项目
+      # 运行项目
       - name: Run project
         run: cargo run --release --verbose
 
-      # 12. 确保重新编译以进行测试
-      # ensure recompile
+      # 确保重新编译以进行测试
       - name: Touch source file to ensure recompile for test
         run: touch riscv-instruction/src/lib.rs
 
-      # 13. 运行测试
+      # 运行测试
       - name: Run tests
         run: cargo test --release --verbose -- --show-output
