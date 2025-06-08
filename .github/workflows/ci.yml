@@ -31,7 +31,7 @@ jobs:
           # 检查链接情况
           ldd ${{ github.workspace }}/assets/riscv64-unknown-elf-as
           # 添加 assets 目录到 PATH
-          echo "${{ github.workspace }}/assets" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/assets" >> $GITHUB_PATH
 
       # 准备所需的 riscv-unified-db 数据库
       - name: Clone riscv-unified-db
