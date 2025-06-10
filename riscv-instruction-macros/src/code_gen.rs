@@ -26,84 +26,8 @@ impl CodeGenerator {
     pub fn generate_instruction_enum(&self) -> TokenStream {
         let analysis = self.analyze_instruction_sharing(&self.instructions);
 
-        let mut restricted_register_defs = TokenStream::new();
-        let mut restricted_immediate_defs = TokenStream::new();
-        let mut processed_register_combinations = std::collections::HashSet::new();
-        let mut processed_immediate_combinations = std::collections::HashSet::new();
-
-        // 收集所有需要的受限类型定义
-        for variants in analysis.values() {
-            for variant in variants {
-                for operand in &variant.instruction.operands {
-                    if let Some(restriction) = &operand.restrictions {
-                        // 处理寄存器类型
-                        if let Some(operand_type) = &operand.operand_type {
-                            match operand_type {
-                                riscv_instruction_parser::types::OperandType::IntegerRegister
-                                | riscv_instruction_parser::types::OperandType::FloatingPointRegister
-                                | riscv_instruction_parser::types::OperandType::VectorRegister => {
-                                    // 检查是否有任何限制条件
-                                    if !restriction.forbidden_values.is_empty() 
-                                        || restriction.multiple_of.is_some()
-                                        || restriction.min_max.is_some()
-                                        || restriction.odd_only.unwrap_or(false) {
-                                        let isa_base = &variant.isa_bases[0]; // 使用第一个ISA基础
-                                        let bit_length =
-                                            operand.bit_lengths.get(isa_base).unwrap_or(&5); // 默认为5位
-                                        let base_type = self
-                                            .get_register_base_type_from_operand_type(
-                                                operand_type,
-                                                *bit_length,
-                                            );
-                                        let type_signature = self.create_register_type_signature(
-                                            base_type,
-                                            &operand.name,
-                                            restriction,
-                                        );
-                                        if processed_register_combinations
-                                            .insert(type_signature.clone())
-                                        {
-                                            let type_def = self
-                                                .generate_restricted_register_type_def(
-                                                    base_type,
-                                                    &operand.name,
-                                                    restriction,
-                                                );
-                                            restricted_register_defs.extend(type_def);
-                                        }
-                                    }
-                                }
-                                riscv_instruction_parser::types::OperandType::SignedInteger
-                                | riscv_instruction_parser::types::OperandType::UnsignedInteger => {
-                                    let isa_base = &variant.isa_bases[0]; // 使用第一个ISA基础
-                                    let bit_length =
-                                        operand.bit_lengths.get(isa_base).unwrap_or(&32);
-                                    let type_signature = self.create_immediate_type_signature(
-                                        operand_type,
-                                        &operand.name,
-                                        *bit_length,
-                                        restriction,
-                                    );
-
-                                    if processed_immediate_combinations
-                                        .insert(type_signature.clone())
-                                    {
-                                        let type_def = self.generate_restricted_immediate_type_def(
-                                            operand_type,
-                                            &operand.name,
-                                            *bit_length,
-                                            restriction,
-                                        );
-                                        restricted_immediate_defs.extend(type_def);
-                                    }
-                                }
-                                _ => {}
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        let (restricted_register_defs, restricted_immediate_defs) =
+            self.generate_all_restricted_type_definitions_for_analysis(&analysis);
 
         let imports = self.generate_imports();
         let instruction_enums = self.generate_instruction_enums(&analysis);
@@ -127,86 +51,8 @@ impl CodeGenerator {
 
     /// 生成完全分离的指令枚举代码（不合并共享指令，完全按扩展和ISA基础分开）
     pub fn generate_separated_instruction_enum(&self) -> TokenStream {
-        let mut restricted_register_defs = TokenStream::new();
-        let mut restricted_immediate_defs = TokenStream::new();
-        let mut processed_register_combinations = std::collections::HashSet::new();
-        let mut processed_immediate_combinations = std::collections::HashSet::new();
-
-        // 收集所有需要的受限类型定义
-        for instruction in &self.instructions {
-            for operand in &instruction.operands {
-                if let Some(restriction) = &operand.restrictions {
-                    // 处理寄存器类型
-                    if let Some(operand_type) = &operand.operand_type {
-                        match operand_type {
-                            riscv_instruction_parser::types::OperandType::IntegerRegister
-                            | riscv_instruction_parser::types::OperandType::FloatingPointRegister
-                            | riscv_instruction_parser::types::OperandType::VectorRegister => {
-                                // 检查是否有任何限制条件
-                                if !restriction.forbidden_values.is_empty() 
-                                    || restriction.multiple_of.is_some()
-                                    || restriction.min_max.is_some()
-                                    || restriction.odd_only.unwrap_or(false) {
-                                    // 对每个ISA基础都处理
-                                    for isa_base in &instruction.isa_bases {
-                                        let bit_length =
-                                            operand.bit_lengths.get(isa_base).unwrap_or(&5);
-                                        let base_type = self
-                                            .get_register_base_type_from_operand_type(
-                                                operand_type,
-                                                *bit_length,
-                                            );
-                                        let type_signature = self.create_register_type_signature(
-                                            base_type,
-                                            &operand.name,
-                                            restriction,
-                                        );
-                                        if processed_register_combinations
-                                            .insert(type_signature.clone())
-                                        {
-                                            let type_def = self
-                                                .generate_restricted_register_type_def(
-                                                    base_type,
-                                                    &operand.name,
-                                                    restriction,
-                                                );
-                                            restricted_register_defs.extend(type_def);
-                                        }
-                                    }
-                                }
-                            }
-                            riscv_instruction_parser::types::OperandType::SignedInteger
-                            | riscv_instruction_parser::types::OperandType::UnsignedInteger => {
-                                // 对每个ISA基础都处理
-                                for isa_base in &instruction.isa_bases {
-                                    let bit_length =
-                                        operand.bit_lengths.get(isa_base).unwrap_or(&32);
-                                    let type_signature = self.create_immediate_type_signature(
-                                        operand_type,
-                                        &operand.name,
-                                        *bit_length,
-                                        restriction,
-                                    );
-
-                                    if processed_immediate_combinations
-                                        .insert(type_signature.clone())
-                                    {
-                                        let type_def = self.generate_restricted_immediate_type_def(
-                                            operand_type,
-                                            &operand.name,
-                                            *bit_length,
-                                            restriction,
-                                        );
-                                        restricted_immediate_defs.extend(type_def);
-                                    }
-                                }
-                            }
-                            _ => {}
-                        }
-                    }
-                }
-            }
-        }
+        let (restricted_register_defs, restricted_immediate_defs) =
+            self.generate_all_restricted_type_definitions_for_separated(&self.instructions);
 
         let imports = self.generate_imports();
         let separated_enums = self.generate_separated_enums();
@@ -225,6 +71,134 @@ impl CodeGenerator {
             #separated_enums
 
             #main_enum
+        }
+    }
+
+    /// 为分析模式生成所有受限类型定义
+    fn generate_all_restricted_type_definitions_for_analysis(
+        &self,
+        analysis: &HashMap<ISAExtension, Vec<InstructionVariant>>,
+    ) -> (TokenStream, TokenStream) {
+        let mut restricted_register_defs = TokenStream::new();
+        let mut restricted_immediate_defs = TokenStream::new();
+        let mut processed_register_combinations = HashSet::new();
+        let mut processed_immediate_combinations = HashSet::new();
+
+        for variants in analysis.values() {
+            for variant in variants {
+                if variant.instruction.operands.is_empty() || variant.isa_bases.is_empty() {
+                    continue;
+                }
+                // 使用第一个ISA基础作为共享/分析指令的代表
+                let isa_base = &variant.isa_bases[0];
+
+                for operand in &variant.instruction.operands {
+                    self.process_operand_for_restricted_type_defs(
+                        operand,
+                        isa_base,
+                        &mut processed_register_combinations,
+                        &mut processed_immediate_combinations,
+                        &mut restricted_register_defs,
+                        &mut restricted_immediate_defs,
+                    );
+                }
+            }
+        }
+        (restricted_register_defs, restricted_immediate_defs)
+    }
+
+    /// 为分离模式生成所有受限类型定义
+    fn generate_all_restricted_type_definitions_for_separated(
+        &self,
+        instructions: &[Instruction],
+    ) -> (TokenStream, TokenStream) {
+        let mut restricted_register_defs = TokenStream::new();
+        let mut restricted_immediate_defs = TokenStream::new();
+        let mut processed_register_combinations = HashSet::new();
+        let mut processed_immediate_combinations = HashSet::new();
+
+        for instruction in instructions {
+            for operand in &instruction.operands {
+                // 对于分离的枚举，我们必须考虑指令支持的每个ISA基础
+                for isa_base in &instruction.isa_bases {
+                    self.process_operand_for_restricted_type_defs(
+                        operand,
+                        isa_base,
+                        &mut processed_register_combinations,
+                        &mut processed_immediate_combinations,
+                        &mut restricted_register_defs,
+                        &mut restricted_immediate_defs,
+                    );
+                }
+            }
+        }
+        (restricted_register_defs, restricted_immediate_defs)
+    }
+
+    /// 处理单个操作数以生成受限类型定义（如果需要）
+    fn process_operand_for_restricted_type_defs(
+        &self,
+        operand: &Operand,
+        isa_base: &ISABase,
+        processed_register_combinations: &mut HashSet<String>,
+        processed_immediate_combinations: &mut HashSet<String>,
+        restricted_register_defs: &mut TokenStream,
+        restricted_immediate_defs: &mut TokenStream,
+    ) {
+        if let Some(restriction) = &operand.restrictions {
+            if let Some(operand_type) = &operand.operand_type {
+                match operand_type {
+                    riscv_instruction_parser::types::OperandType::IntegerRegister
+                    | riscv_instruction_parser::types::OperandType::FloatingPointRegister
+                    | riscv_instruction_parser::types::OperandType::VectorRegister => {
+                        if !restriction.forbidden_values.is_empty()
+                            || restriction.multiple_of.is_some()
+                            || restriction.min_max.is_some()
+                            || restriction.odd_only.unwrap_or(false)
+                        {
+                            let bit_length = operand.bit_lengths.get(isa_base).unwrap_or(&5); // 默认为5位
+                            let base_type = self.get_register_base_type_from_operand_type(
+                                operand_type,
+                                *bit_length,
+                            );
+                            let type_signature = self.create_register_type_signature(
+                                base_type,
+                                &operand.name,
+                                restriction,
+                            );
+                            if processed_register_combinations.insert(type_signature) {
+                                let type_def = self.generate_restricted_register_type_def(
+                                    base_type,
+                                    &operand.name,
+                                    restriction,
+                                );
+                                restricted_register_defs.extend(type_def);
+                            }
+                        }
+                    }
+                    riscv_instruction_parser::types::OperandType::SignedInteger
+                    | riscv_instruction_parser::types::OperandType::UnsignedInteger => {
+                        let bit_length = operand.bit_lengths.get(isa_base).unwrap_or(&32);
+                        let type_signature = self.create_immediate_type_signature(
+                            operand_type,
+                            &operand.name,
+                            *bit_length,
+                            restriction,
+                        );
+
+                        if processed_immediate_combinations.insert(type_signature) {
+                            let type_def = self.generate_restricted_immediate_type_def(
+                                operand_type,
+                                &operand.name,
+                                *bit_length,
+                                restriction,
+                            );
+                            restricted_immediate_defs.extend(type_def);
+                        }
+                    }
+                    _ => {}
+                }
+            }
         }
     }
 
