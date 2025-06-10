@@ -84,5 +84,12 @@ pub fn generate_separated_riscv_instructions(
     let code_generator = CodeGenerator::new(instructions);
 
     let generated_code = code_generator.generate_separated_instruction_enum();
+
+    // let code_string = generated_code.to_string();
+    // // 将生成的代码写入到指定的文件中
+    // let output_file = PathBuf::from("./").join("riscv_instructions.rs");
+    // fs::write(&output_file, code_string)
+    //     .unwrap_or_else(|e| panic!("Failed to write to {}: {}", output_file.display(), e));
+
     proc_macro::TokenStream::from(generated_code)
 }

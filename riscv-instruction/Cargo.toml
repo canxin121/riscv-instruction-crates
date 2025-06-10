@@ -11,9 +11,9 @@ description.workspace = true
 [dependencies]
 riscv-instruction-macros = { path = "../riscv-instruction-macros" }
 riscv-instruction-types = { path = "../riscv-instruction-types" }
+serde.workspace = true
 rand.workspace = true
 
 [dev-dependencies]
-serde.workspace = true
 serde_json.workspace = true
 chrono.workspace = true
