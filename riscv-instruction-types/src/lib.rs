@@ -18,6 +18,70 @@ impl Random for bool {
     }
 }
 
+impl Random for u8 {
+    type Output = u8;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for u16 {
+    type Output = u16;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for u32 {
+    type Output = u32;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for u64 {
+    type Output = u64;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for i8 {
+    type Output = i8;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for i16 {
+    type Output = i16;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for i32 {
+    type Output = i32;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
+impl Random for i64 {
+    type Output = i64;
+
+    fn random_with_rng<R: rand::Rng>(rng: &mut R) -> Self::Output {
+        rng.random()
+    }
+}
+
 /// Common trait for validated value types
 pub trait ValidatedValue<T: 'static> {
     const MIN: T;

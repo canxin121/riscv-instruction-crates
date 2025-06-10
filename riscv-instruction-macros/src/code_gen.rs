@@ -55,6 +55,7 @@ impl CodeGenerator {
             self.generate_all_restricted_type_definitions_for_separated(&self.instructions);
 
         let imports = self.generate_imports();
+        let instruction_structs = self.generate_separated_instruction_structs();
         let separated_enums = self.generate_separated_enums();
         let main_enum = self.generate_separated_main_enum();
 
@@ -67,6 +68,8 @@ impl CodeGenerator {
             #restricted_register_defs
 
             #restricted_immediate_defs
+
+            #instruction_structs
 
             #separated_enums
 
@@ -363,12 +366,98 @@ impl CodeGenerator {
         true
     }
 
+    /// 生成所有指令结构体
+    fn generate_instruction_structs(
+        &self,
+        analysis: &HashMap<ISAExtension, Vec<InstructionVariant>>,
+    ) -> TokenStream {
+        let mut all_structs = TokenStream::new();
+        let mut processed_instructions = HashSet::new();
+
+        for (extension, variants) in analysis {
+            for variant in variants {
+                let inst_name = &variant.instruction.name;
+                
+                // 创建结构体名称，包含前缀避免冲突
+                let struct_name_base = self.instruction_name_to_variant(inst_name);
+                let struct_name = if variant.is_shared {
+                    format!("{}_Shared_{}", extension, struct_name_base)
+                } else {
+                    let isa_base = &variant.isa_bases[0];
+                    format!("{}_{}_{}", isa_base, extension, struct_name_base)
+                };
+
+                if processed_instructions.contains(&struct_name) {
+                    continue;
+                }
+                processed_instructions.insert(struct_name.clone());
+
+                let struct_ident = Ident::new(&struct_name, Span::call_site());
+                let doc_comment = format!("{} instruction for {} extension", inst_name, extension);
+
+                let attribute_token = match &variant.instruction.assembly_syntax {
+                    riscv_instruction_parser::types::AssemblySyntax::RustCode(code) => {
+                        let code_str = code.as_str();
+                        quote! { #[asm_code(#code_str)] }
+                    }
+                    riscv_instruction_parser::types::AssemblySyntax::Format(format_str) => {
+                        quote! { #[asm(#format_str)] }
+                    }
+                };
+
+                if variant.instruction.operands.is_empty() {
+                    all_structs.extend(quote! {
+                        #[doc = #doc_comment]
+                        #[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
+                        #attribute_token
+                        pub struct #struct_ident;
+                    });
+                } else {
+                    let isa_base = if variant.is_shared {
+                        &variant.isa_bases[0] // 对于共享指令使用第一个ISA基础
+                    } else {
+                        &variant.isa_bases[0]
+                    };
+
+                    let fields = variant
+                        .instruction
+                        .operands
+                        .iter()
+                        .map(|op| {
+                            let op_name = Ident::new(&op.name, Span::call_site());
+                            let op_type_str = self.operand_to_typed_struct(op, isa_base);
+                            let op_type: TokenStream = op_type_str
+                                .parse()
+                                .expect("Failed to parse operand type string");
+                            quote! { pub #op_name: #op_type }
+                        })
+                        .collect::<Vec<_>>();
+
+                    all_structs.extend(quote! {
+                        #[doc = #doc_comment]
+                        #[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
+                        #attribute_token
+                        pub struct #struct_ident {
+                            #(#fields),*
+                        }
+                    });
+                }
+            }
+        }
+
+        all_structs
+    }
+
     /// 生成指令枚举
     fn generate_instruction_enums(
         &self,
         analysis: &HashMap<ISAExtension, Vec<InstructionVariant>>,
     ) -> TokenStream {
         let mut all_enums = TokenStream::new();
+
+        // 首先生成所有指令结构体
+        let instruction_structs = self.generate_instruction_structs(analysis);
+        all_enums.extend(instruction_structs);
 
         let shared_enums = self.generate_shared_instructions_enum(analysis);
         all_enums.extend(shared_enums);
@@ -620,6 +709,85 @@ impl CodeGenerator {
         }
     }
 
+    /// 生成分离版本的指令结构体
+    fn generate_separated_instruction_structs(&self) -> TokenStream {
+        let mut all_structs = TokenStream::new();
+        let mut by_extension_and_isa: HashMap<(ISAExtension, ISABase), Vec<&Instruction>> =
+            HashMap::new();
+
+        // 按扩展和ISA基础分组
+        for inst in &self.instructions {
+            for &isa_base in &inst.isa_bases {
+                by_extension_and_isa
+                    .entry((inst.extension, isa_base))
+                    .or_default()
+                    .push(inst);
+            }
+        }
+
+        let mut processed_instructions = HashSet::new();
+
+        for ((extension, isa_base), instructions) in by_extension_and_isa {
+            for inst in instructions {
+                let struct_name = format!("{}_{}_{}", 
+                    isa_base,
+                    extension, 
+                    self.instruction_name_to_variant(&inst.name));
+
+                if processed_instructions.contains(&struct_name) {
+                    continue;
+                }
+                processed_instructions.insert(struct_name.clone());
+
+                let struct_ident = Ident::new(&struct_name, Span::call_site());
+                let doc_comment = format!("{} {} instruction: {}", isa_base, extension, inst.name);
+
+                let attribute_token = match &inst.assembly_syntax {
+                    riscv_instruction_parser::types::AssemblySyntax::RustCode(code) => {
+                        let code_str = code.as_str();
+                        quote! { #[asm_code(#code_str)] }
+                    }
+                    riscv_instruction_parser::types::AssemblySyntax::Format(format_str) => {
+                        quote! { #[asm(#format_str)] }
+                    }
+                };
+
+                if inst.operands.is_empty() {
+                    all_structs.extend(quote! {
+                        #[doc = #doc_comment]
+                        #[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
+                        #attribute_token
+                        pub struct #struct_ident;
+                    });
+                } else {
+                    let fields = inst
+                        .operands
+                        .iter()
+                        .map(|op| {
+                            let op_name = Ident::new(&op.name, Span::call_site());
+                            let op_type_str = self.operand_to_typed_struct(op, &isa_base);
+                            let op_type: TokenStream = op_type_str
+                                .parse()
+                                .expect("Failed to parse operand type string");
+                            quote! { pub #op_name: #op_type }
+                        })
+                        .collect::<Vec<_>>();
+
+                    all_structs.extend(quote! {
+                        #[doc = #doc_comment]
+                        #[derive(Debug, Clone, PartialEq, DeriveInstructionDisplay, DeriveRandom)]
+                        #attribute_token
+                        pub struct #struct_ident {
+                            #(#fields),*
+                        }
+                    });
+                }
+            }
+        }
+
+        all_structs
+    }
+
     /// 生成完全分离的指令枚举（按扩展和ISA基础完全分开）
     fn generate_separated_enums(&self) -> TokenStream {
         let mut all_enums = TokenStream::new();
@@ -652,39 +820,14 @@ impl CodeGenerator {
                         Span::call_site(),
                     );
 
-                    let attribute_token = match &inst.assembly_syntax {
-                        riscv_instruction_parser::types::AssemblySyntax::RustCode(code) => {
-                            let code_str = code.as_str();
-                            quote! { #[asm_code(#code_str)] }
-                        }
-                        riscv_instruction_parser::types::AssemblySyntax::Format(format_str) => {
-                            quote! { #[asm(#format_str)] }
-                        }
-                    };
+                    let struct_name = format!("{}_{}_{}", 
+                        isa_base,
+                        extension, 
+                        self.instruction_name_to_variant(&inst.name));
+                    let struct_ident = Ident::new(&struct_name, Span::call_site());
 
-                    if inst.operands.is_empty() {
-                        quote! {
-                            #attribute_token
-                            #variant_name
-                        }
-                    } else {
-                        let operands = inst
-                            .operands
-                            .iter()
-                            .map(|op| {
-                                let op_name = Ident::new(&op.name, Span::call_site());
-                                let op_type_str = self.operand_to_typed_struct(op, &isa_base);
-                                let op_type: TokenStream = op_type_str
-                                    .parse()
-                                    .expect("Failed to parse operand type string");
-                                quote! { #op_name: #op_type }
-                            })
-                            .collect::<Vec<_>>();
-
-                        quote! {
-                            #attribute_token
-                            #variant_name { #(#operands),* }
-                        }
+                    quote! {
+                        #variant_name(#struct_ident)
                     }
                 })
                 .collect::<Vec<_>>();
@@ -799,6 +942,11 @@ impl CodeGenerator {
         result
     }
 
+    /// 获取变体所属的扩展
+    fn get_extension_for_variant(&self, variant: &InstructionVariant) -> String {
+        variant.instruction.extension.to_string()
+    }
+
     /// 构建枚举变体
     fn build_variants(
         &self,
@@ -813,42 +961,23 @@ impl CodeGenerator {
                     Span::call_site(),
                 );
 
-                let attribute_token = match &variant.instruction.assembly_syntax {
-                    riscv_instruction_parser::types::AssemblySyntax::RustCode(code) => {
-                        let code_str = code.as_str();
-                        quote! { #[asm_code(#code_str)] }
-                    }
-                    riscv_instruction_parser::types::AssemblySyntax::Format(format_str) => {
-                        quote! { #[asm(#format_str)] }
-                    }
+                // 创建结构体名称，包含前缀避免冲突
+                let struct_name = if variant.is_shared {
+                    format!("{}_Shared_{}", 
+                        self.get_extension_for_variant(variant), 
+                        self.instruction_name_to_variant(&variant.instruction.name))
+                } else {
+                    let isa_base = isa_base_override.unwrap_or_else(|| &variant.isa_bases[0]);
+                    format!("{}_{}_{}", 
+                        isa_base, 
+                        self.get_extension_for_variant(variant),
+                        self.instruction_name_to_variant(&variant.instruction.name))
                 };
 
-                if variant.instruction.operands.is_empty() {
-                    quote! {
-                        #attribute_token
-                        #variant_name
-                    }
-                } else {
-                    let operands = variant
-                        .instruction
-                        .operands
-                        .iter()
-                        .map(|op| {
-                            let op_name = Ident::new(&op.name, Span::call_site());
-                            let isa_base =
-                                isa_base_override.unwrap_or_else(|| &variant.isa_bases[0]);
-                            let op_type_str = self.operand_to_typed_struct(op, isa_base);
-                            let op_type: TokenStream = op_type_str
-                                .parse()
-                                .expect("Failed to parse operand type string");
-                            quote! { #op_name: #op_type }
-                        })
-                        .collect::<Vec<_>>();
+                let struct_ident = Ident::new(&struct_name, Span::call_site());
 
-                    quote! {
-                        #attribute_token
-                        #variant_name { #(#operands),* }
-                    }
+                quote! {
+                    #variant_name(#struct_ident)
                 }
             })
             .collect()

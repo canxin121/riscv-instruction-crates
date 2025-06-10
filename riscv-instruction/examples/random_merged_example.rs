@@ -1,4 +1,3 @@
-// filepath: riscv-instruction/examples/random_merged_example.rs
 use riscv_instruction::merged_instructions::*;
 
 fn main() {

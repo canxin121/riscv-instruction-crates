@@ -1,4 +1,3 @@
-// filepath: riscv-instruction/examples/random_separated_example.rs
 use riscv_instruction::separated_instructions::*;
 
 fn main() {
