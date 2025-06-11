@@ -474,7 +474,7 @@ impl CodeGenerator {
 
             all_enums.extend(quote! {
                 /// Available extensions for RV32 ISA base
-                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Sequence)]
                 #[allow(non_camel_case_types)]
                 pub enum RV32Extensions {
                     #(#rv32_enum_variants),*
@@ -494,7 +494,7 @@ impl CodeGenerator {
 
             all_enums.extend(quote! {
                 /// Available extensions for RV64 ISA base
-                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Sequence)]
                 #[allow(non_camel_case_types)]
                 pub enum RV64Extensions {
                     #(#rv64_enum_variants),*
@@ -760,7 +760,7 @@ impl CodeGenerator {
 
             all_enums.extend(quote! {
                 /// Available extensions for RV32 ISA base
-                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Sequence)]
                 #[allow(non_camel_case_types)]
                 pub enum RV32Extensions {
                     #(#rv32_enum_variants),*
@@ -780,7 +780,7 @@ impl CodeGenerator {
 
             all_enums.extend(quote! {
                 /// Available extensions for RV64 ISA base
-                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+                #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize, Sequence)]
                 #[allow(non_camel_case_types)]
                 pub enum RV64Extensions {
                     #(#rv64_enum_variants),*

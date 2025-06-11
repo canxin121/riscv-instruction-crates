@@ -13,6 +13,7 @@ riscv-instruction-macros = { path = "../riscv-instruction-macros" }
 riscv-instruction-types = { path = "../riscv-instruction-types" }
 serde.workspace = true
 rand.workspace = true
+enum-iterator.workspace = true
 
 [dev-dependencies]
 serde_json.workspace = true

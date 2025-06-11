@@ -16,7 +16,7 @@ homepage = "https://github.com/canxin121/riscv-instruction-crates"
 description = "RISC-V instruction assembly library"
 
 [workspace.dependencies]
-syn = { version = "2.0.101", features = ["full"] }
+syn = { version = "2.0.102", features = ["full"] }
 quote = "1.0.40"
 proc-macro2 = "1.0.95"
 heck = "0.5.0"
@@ -25,3 +25,4 @@ serde_json = "1.0.140"
 rand = "0.9.1"
 chrono = "0.4.41"
 serde_yaml = "0.9.34-deprecated"
+enum-iterator = "2.1.0"

@@ -12,6 +12,7 @@ impl CodeGenerator {
             pub use riscv_instruction_types::*;
             use riscv_instruction_macros::{DeriveValidatedValue, DeriveInstructionDisplay, DeriveRandom};
             use serde::{Deserialize, Serialize};
+            use enum_iterator::Sequence;
         }
     }
 
