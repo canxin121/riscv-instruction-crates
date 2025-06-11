@@ -364,6 +364,7 @@ fn fix_round_mode_removal(
             | "fcvt.s.bf16"
             | "fcvt.s.h"
             | "fcvt.d.h"
+            | "fcvtmod.w.d"
     ) {
         return;
     }
@@ -479,7 +480,7 @@ fn fix_floating_point_load_store_addressing(
             "flw" => ("fd", "xs1", "imm"),
             "fsw" => ("fs2", "xs1", "imm"), // fs2 是源寄存器
             "fld" => ("fd", "xs1", "imm"),
-            "flq" => ("qd", "xs1", "imm"),
+            "flq" => ("fd", "xs1", "imm"),
             _ => return,
         };
 
@@ -818,8 +819,8 @@ fn fix_floating_point_register_errors(
         }
         "fltq.q" => {
             // 修正：qd -> xd (浮点比较指令的结果应写入整数寄存器)
-            fix_operand_name(instruction, "qd", "xd");
-            update_syntax_operands(operands_part, final_syntax_operands, "qd", "xd");
+            fix_operand_name(instruction, "fd", "xd");
+            update_syntax_operands(operands_part, final_syntax_operands, "fd", "xd");
         }
 
         _ => {}
@@ -921,6 +922,8 @@ fn generate_aqrl_assembly_code(
         };
 
         let escaped_prefix = prefix_operands.replace('\\', "\\\\").replace('"', "\\\"");
+
+        let last_operand = last_operand.replace('(', "").replace(')', "");
 
         match (has_aq, has_rl) {
             (true, true) => format!(

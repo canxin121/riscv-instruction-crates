@@ -91,12 +91,13 @@ impl CodeGenerator {
                                 operand_type,
                                 *bit_length,
                             );
-                            let type_signature = self.create_register_type_signature(
+                            // 使用生成的类型名称作为去重键
+                            let type_name_key = self.generate_restricted_register_type_name(
                                 base_type,
                                 &operand.name,
                                 restriction,
                             );
-                            if processed_register_combinations.insert(type_signature) {
+                            if processed_register_combinations.insert(type_name_key) {
                                 let type_def = self.generate_restricted_register_type_def(
                                     base_type,
                                     &operand.name,
@@ -109,14 +110,15 @@ impl CodeGenerator {
                     riscv_instruction_parser::types::OperandType::SignedInteger
                     | riscv_instruction_parser::types::OperandType::UnsignedInteger => {
                         let bit_length = operand.bit_lengths.get(isa_base).unwrap_or(&32);
-                        let type_signature = self.create_immediate_type_signature(
+                        // 使用生成的类型名称作为去重键
+                        let type_name_key = self.generate_restricted_immediate_type_name(
                             operand_type,
                             &operand.name,
                             *bit_length,
                             restriction,
                         );
 
-                        if processed_immediate_combinations.insert(type_signature) {
+                        if processed_immediate_combinations.insert(type_name_key) {
                             let type_def = self.generate_restricted_immediate_type_def(
                                 operand_type,
                                 &operand.name,

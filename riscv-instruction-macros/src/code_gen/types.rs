@@ -55,25 +55,6 @@ impl CodeGenerator {
         }
     }
 
-    pub fn create_register_type_signature(
-        &self,
-        base_type: &str,
-        operand_name: &str,
-        restriction: &riscv_instruction_parser::types::OperandRestriction,
-    ) -> String {
-        format!(
-            "{}_{}_{}_{:?}_{:?}_{}",
-            base_type,
-            operand_name,
-            restriction
-                .multiple_of
-                .map_or("none".to_string(), |m| m.to_string()),
-            restriction.min_max,
-            restriction.forbidden_values,
-            restriction.odd_only.unwrap_or(false)
-        )
-    }
-
     /// 生成受限寄存器类型名称
     pub fn generate_restricted_register_type_name(
         &self,
@@ -327,27 +308,5 @@ impl CodeGenerator {
             #[validated(#(#attrs),*)]
             pub struct #type_name(#inner_type);
         }
-    }
-
-    /// 创建立即数类型签名用于去重
-    pub fn create_immediate_type_signature(
-        &self,
-        operand_type: &riscv_instruction_parser::types::OperandType,
-        operand_name: &str,
-        bit_length: u8,
-        restriction: &riscv_instruction_parser::types::OperandRestriction,
-    ) -> String {
-        format!(
-            "{:?}_{}_{}_{}_{:?}_{:?}_{}",
-            operand_type,
-            operand_name,
-            bit_length,
-            restriction
-                .multiple_of
-                .map_or("none".to_string(), |m| m.to_string()),
-            restriction.min_max,
-            restriction.forbidden_values,
-            restriction.odd_only.unwrap_or(false)
-        )
     }
 }
